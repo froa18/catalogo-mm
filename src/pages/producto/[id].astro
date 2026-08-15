@@ -43,13 +43,18 @@ const precio = formatearPrecio(producto.precioUSD);
 
         <div class="colgante" aria-hidden="true">
           <span class="cuerda"></span>
-          <span class="etiqueta"><span class="precio-etiqueta">{precio}</span></span>
+          <span class="etiqueta">
+            <span class="precio-etiqueta">{precio}</span>
+            <span class="codigo-etiqueta">{producto.codigo}</span>
+          </span>
         </div>
       </div>
 
       <div class="detalle">
         <h1 class="nombre">{producto.nombre}</h1>
-        <p class="precio">{precio}</p>
+        <p class="precio">
+          {precio} <span class="codigo">· {producto.codigo}</span>
+        </p>
         <p class="descripcion">{producto.descripcion}</p>
 
         {
@@ -224,6 +229,14 @@ const precio = formatearPrecio(producto.precioUSD);
     line-height: 1;
   }
 
+  .codigo-etiqueta {
+    margin-top: 2px;
+    color: var(--tinta-suave);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
   /* --- Detalle -------------------------------------------------- */
 
   .nombre {
@@ -240,6 +253,13 @@ const precio = formatearPrecio(producto.precioUSD);
     font-family: var(--serif);
     font-size: 1.375rem;
     font-weight: 600;
+  }
+
+  .precio .codigo {
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
   }
 
   .descripcion {
@@ -438,6 +458,7 @@ const precio = formatearPrecio(producto.precioUSD);
 
       agregar({
         id: producto.id,
+        codigo: producto.codigo,
         nombre: producto.nombre,
         precioUSD: producto.precioUSD,
         talla,

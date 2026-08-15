@@ -43,7 +43,7 @@ function guardar(lineas) {
   return lineas;
 }
 
-export function agregar({ id, nombre, precioUSD, talla, color, cantidad = 1 }) {
+export function agregar({ id, codigo, nombre, precioUSD, talla, color, cantidad = 1 }) {
   const lineas = leer();
   const clave = claveDe(id, talla, color);
   const existente = lineas.find((l) => l.clave === clave);
@@ -54,6 +54,7 @@ export function agregar({ id, nombre, precioUSD, talla, color, cantidad = 1 }) {
     lineas.push({
       clave,
       id,
+      codigo,
       nombre,
       precioUSD,
       talla,

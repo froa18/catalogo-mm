@@ -371,7 +371,7 @@ const faltaNumero = !WHATSAPP.numero;
         <article class="linea">
           <div>
             <h2 class="linea-nombre">${l.nombre}</h2>
-            <p class="linea-variante">Talla ${l.talla} · ${l.color}</p>
+            <p class="linea-variante">${l.codigo ? `${l.codigo} · ` : ''}Talla ${l.talla} · ${l.color}</p>
           </div>
           <span class="linea-precio">${formatearPrecio(l.precioUSD * l.cantidad)}</span>
           <div class="linea-acciones">

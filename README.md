@@ -75,6 +75,7 @@ src/
 ```json
 {
   "id": "blusa-aurora",
+  "codigo": "MM-001",
   "nombre": "Blusa Aurora",
   "descripcion": "Manga larga con caída suave y puño abierto.",
   "categoria": "manga-larga",
@@ -90,6 +91,7 @@ src/
 
 | Campo | Para qué sirve |
 |---|---|
+| `codigo` | Referencia corta (`MM-001`, secuencial) para identificar la pieza fuera del sitio — en el pedido de WhatsApp y al llevar el inventario a mano |
 | `precioUSD` | Precio en dólares. Ver decisión 8 en `docs/decisiones.md` |
 | `tallas` | Se elimina una talla del arreglo cuando se agota |
 | `colores` | El `hex` permite mostrar el color real en el selector |

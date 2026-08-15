@@ -29,8 +29,9 @@ export function construirMensaje(lineas, datos = {}) {
 
   for (const l of lineas) {
     const subtotal = formatearPrecio(l.precioUSD * l.cantidad);
+    const codigo = l.codigo ? ` (${l.codigo})` : '';
 
-    partes.push(`*${l.nombre}*`);
+    partes.push(`*${l.nombre}*${codigo}`);
     partes.push(`Talla ${l.talla} · Color ${l.color}`);
 
     // Con más de una pieza se muestra el unitario, para que quede claro de
@@ -43,9 +44,6 @@ export function construirMensaje(lineas, datos = {}) {
     partes.push('');
   }
 
-  partes.push(SEPARADOR);
-  partes.push(`*TOTAL: ${formatearPrecio(total(lineas))}*`);
-
   const extras = [
     ['👤', datos.nombre],
     ['📍', datos.zona],
@@ -55,13 +53,18 @@ export function construirMensaje(lineas, datos = {}) {
   ].filter(([, valor]) => valor && String(valor).trim());
 
   if (extras.length) {
-    partes.push('');
     partes.push('*Mis datos*');
     for (const [icono, valor] of extras) {
       partes.push(`${icono} ${String(valor).trim()}`);
     }
+    partes.push('');
   }
 
+  // El total cierra el mensaje. Es el dato que se busca primero al recibir un
+  // pedido, y al final queda a la vista sin tener que desplazarse hacia arriba
+  // en el chat.
+  partes.push(SEPARADOR);
+  partes.push(`*TOTAL: ${formatearPrecio(total(lineas))}*`);
   partes.push('');
   partes.push(`_Ref. ${referencia}_`);
 

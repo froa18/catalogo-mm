@@ -270,7 +270,7 @@
         <article class="linea">
           <div>
             <h3 class="linea-nombre">${l.nombre}</h3>
-            <p class="linea-variante">Talla ${l.talla} · ${l.color}</p>
+            <p class="linea-variante">${l.codigo ? `${l.codigo} · ` : ''}Talla ${l.talla} · ${l.color}</p>
           </div>
           <span class="linea-precio">${formatearPrecio(l.precioUSD * l.cantidad)}</span>
           <div class="linea-acciones">
