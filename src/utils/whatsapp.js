@@ -51,11 +51,32 @@ export function construirMensaje(lineas, datos = {}) {
 }
 
 /**
+ * Lleva el número a formato internacional, que es el único que acepta wa.me.
+ *
+ *   0414-031-7475  ->  584140317475
+ *   4140317475     ->  584140317475
+ *   584140317475   ->  584140317475
+ */
+export function normalizarNumero(crudo, codigoPais = WHATSAPP.codigoPais) {
+  let digitos = String(crudo ?? '').replace(/\D/g, '');
+  if (!digitos) return '';
+
+  if (digitos.startsWith('0')) {
+    // Formato local: el 0 inicial se sustituye por el código de país.
+    digitos = codigoPais + digitos.slice(1);
+  } else if (!digitos.startsWith(codigoPais)) {
+    digitos = codigoPais + digitos;
+  }
+
+  return digitos;
+}
+
+/**
  * Devuelve null si todavía no hay número configurado, para que la interfaz
  * pueda avisar en vez de abrir un enlace roto.
  */
 export function construirEnlace(mensaje) {
-  const numero = (WHATSAPP.numero || '').replace(/\D/g, '');
+  const numero = normalizarNumero(WHATSAPP.numero);
   if (!numero) return null;
 
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;

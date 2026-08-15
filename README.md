@@ -25,10 +25,29 @@ configurar el número de WhatsApp.
 | 4 | Panel de edición con Sanity | Pendiente |
 | 5 | Fotos reales y lanzamiento | Pendiente |
 
-### Bloqueante para publicar
+> El número de WhatsApp configurado es **provisional, para pruebas**. Debe
+> reemplazarse por el del negocio antes de publicar.
 
-`WHATSAPP.numero` en `src/config.js` está vacío. Hasta definirlo, la pantalla
-de pedido arma el mensaje pero no puede enviarlo, y lo advierte en la interfaz.
+## Configurar el número de WhatsApp
+
+El número **no se escribe en el código**. Este repositorio es público, y todo lo
+que entra en un commit queda en el historial de forma permanente — cambiarlo
+después no lo borra.
+
+En local:
+
+```bash
+cp .env.example .env    # y completar PUBLIC_WHATSAPP_NUMERO
+```
+
+Formato: código de país + número, solo dígitos. En Venezuela el `0` inicial se
+reemplaza por `58` (`0414-031-7475` → `584140317475`). De todas formas
+`normalizarNumero()` en `src/utils/whatsapp.js` corrige las variantes comunes.
+
+En producción se define como variable de entorno en Vercel, no en el repo.
+
+Sin número configurado el sitio no se rompe: la pantalla de pedido arma el
+mensaje, avisa que falta configurarlo y deshabilita el envío.
 
 ## Cómo correrlo
 

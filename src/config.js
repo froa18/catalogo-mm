@@ -13,9 +13,17 @@ export const MARCA = {
 };
 
 export const WHATSAPP = {
-  // Pendiente: número real de destino, en formato internacional sin signos.
-  // Ejemplo Venezuela: '584121234567'
-  numero: '',
+  // Código de país del negocio. Venezuela: 58.
+  codigoPais: '58',
+
+  /**
+   * El número NO se escribe acá: este archivo se sube al repositorio público
+   * y todo lo que entra a un commit queda en el historial para siempre.
+   *
+   * Se define en `.env` (ver `.env.example`), que está excluido del repo, y
+   * en las variables de entorno de Vercel al desplegar.
+   */
+  numero: import.meta.env.PUBLIC_WHATSAPP_NUMERO ?? '',
 
   // Encabezado del mensaje que se genera al enviar el pedido.
   saludo: 'Hola! Quiero pedir:',
