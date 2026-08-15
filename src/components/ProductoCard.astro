@@ -20,7 +20,12 @@ const { producto } = Astro.props;
 const agotado = producto.tallas.length === 0;
 ---
 
-<article class="tarjeta" data-categoria={producto.categoria} data-id={producto.id}>
+<a
+  class="tarjeta"
+  href={`/producto/${producto.id}/`}
+  data-categoria={producto.categoria}
+  data-id={producto.id}
+>
   <div class="lienzo">
     {
       producto.imagen ? (
@@ -66,12 +71,24 @@ const agotado = producto.tallas.length === 0;
       </p>
     </div>
   </div>
-</article>
+</a>
 
 <style>
   .tarjeta {
     display: flex;
     flex-direction: column;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .tarjeta:hover .lienzo {
+    border-color: var(--sage);
+  }
+
+  .tarjeta:hover .nombre {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--sage);
   }
 
   /* --- Zona de imagen ------------------------------------------ */

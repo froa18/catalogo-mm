@@ -41,6 +41,27 @@ export const BOLIVARES = {
 };
 
 /**
+ * Formas de pago ofrecidas al revisar el pedido.
+ * Editar esta lista según lo que acepte el negocio.
+ */
+export const FORMAS_PAGO = [
+  'Pago móvil',
+  'Transferencia (Bs)',
+  'Efectivo (divisas)',
+  'Zelle',
+  'Binance / USDT',
+];
+
+/**
+ * Formas de entrega ofrecidas al revisar el pedido.
+ */
+export const FORMAS_ENTREGA = [
+  'Delivery a domicilio',
+  'Retiro en punto acordado',
+  'Envío nacional (MRW / Zoom)',
+];
+
+/**
  * Categorías del catálogo. El orden define cómo aparecen los filtros.
  */
 export const CATEGORIAS = [

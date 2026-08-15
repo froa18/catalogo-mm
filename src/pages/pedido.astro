@@ -1,0 +1,434 @@
+---
+import Base from '../layouts/Base.astro';
+import { MARCA, WHATSAPP, FORMAS_PAGO, FORMAS_ENTREGA } from '../config.js';
+
+const faltaNumero = !WHATSAPP.numero;
+---
+
+<Base titulo={`Tu pedido — ${MARCA.nombre}`}>
+  <div class="envoltura estrecha">
+    <nav class="migas">
+      <a href="/">← Seguir viendo el catálogo</a>
+    </nav>
+
+    <h1 class="titulo">Tu pedido</h1>
+    <p class="referencia" data-referencia></p>
+
+    {
+      faltaNumero && (
+        <p class="aviso">
+          <strong>Falta configurar el número de WhatsApp.</strong> El pedido se
+          arma correctamente, pero todavía no puede enviarse. Se define en
+          <code>src/config.js</code>.
+        </p>
+      )
+    }
+
+    <section class="lineas" data-lineas aria-label="Piezas del pedido"></section>
+
+    <form class="datos" data-formulario hidden>
+      <div class="total">
+        <span>Total</span>
+        <strong data-total></strong>
+      </div>
+
+      <div class="campo">
+        <label for="nombre">Tu nombre</label>
+        <input id="nombre" name="nombre" type="text" required autocomplete="name" />
+      </div>
+
+      <div class="campo">
+        <label for="zona">Zona de entrega</label>
+        <input
+          id="zona"
+          name="zona"
+          type="text"
+          required
+          placeholder="Ciudad o sector"
+        />
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <label for="pago">Forma de pago</label>
+          <select id="pago" name="pago">
+            {FORMAS_PAGO.map((f) => <option value={f}>{f}</option>)}
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="entrega">Forma de entrega</label>
+          <select id="entrega" name="entrega">
+            {FORMAS_ENTREGA.map((f) => <option value={f}>{f}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="nota">Nota <span class="opcional">(opcional)</span></label>
+        <textarea id="nota" name="nota" rows="2" placeholder="Algo que debamos saber"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="enviar" disabled={faltaNumero}>
+        {faltaNumero ? 'Falta configurar WhatsApp' : 'Enviar pedido por WhatsApp'}
+      </button>
+
+      <p class="nota-pie">
+        Se abrirá WhatsApp con tu pedido ya escrito. Vas a poder revisarlo antes
+        de mandarlo.
+      </p>
+    </form>
+  </div>
+</Base>
+
+<style>
+  .estrecha {
+    max-width: 640px;
+  }
+
+  .migas {
+    padding: var(--e5) 0 var(--e4);
+  }
+
+  .migas a {
+    color: var(--tinta-media);
+    font-size: 0.8125rem;
+    text-decoration: none;
+  }
+
+  .migas a:hover {
+    color: var(--tinta);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .titulo {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  .referencia {
+    margin: var(--e1) 0 0;
+    color: var(--tinta-suave);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+  }
+
+  .aviso {
+    margin: var(--e5) 0 0;
+    padding: var(--e4);
+    background: var(--sage-humo);
+    border-left: 3px solid var(--sage);
+    border-radius: var(--radio);
+    font-size: 0.875rem;
+  }
+
+  .aviso code {
+    font-size: 0.8125em;
+  }
+
+  /* --- Líneas ---------------------------------------------------- */
+
+  .lineas {
+    margin-top: var(--e5);
+  }
+
+  .lineas :global(.vacio) {
+    padding: var(--e7) 0;
+    color: var(--tinta-suave);
+    text-align: center;
+  }
+
+  .lineas :global(.vacio a) {
+    color: var(--tinta);
+  }
+
+  .lineas :global(.linea) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--e1) var(--e3);
+    padding: var(--e4) 0;
+    border-bottom: 1px solid var(--hueso-borde);
+  }
+
+  .lineas :global(.linea-nombre) {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    font-weight: 400;
+  }
+
+  .lineas :global(.linea-variante) {
+    margin: 2px 0 0;
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .lineas :global(.linea-precio) {
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .lineas :global(.linea-acciones) {
+    display: flex;
+    align-items: center;
+    gap: var(--e3);
+    margin-top: var(--e2);
+  }
+
+  .lineas :global(.cantidad) {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--hueso-borde);
+    border-radius: 100px;
+  }
+
+  .lineas :global(.cantidad button) {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: var(--tinta-media);
+  }
+
+  .lineas :global(.cantidad button:hover) {
+    background: var(--hueso-hondo);
+    color: var(--tinta);
+  }
+
+  .lineas :global(.cantidad span) {
+    min-width: 26px;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .lineas :global(.quitar) {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .lineas :global(.quitar:hover) {
+    color: var(--tinta);
+  }
+
+  /* --- Formulario ------------------------------------------------ */
+
+  .datos {
+    padding: var(--e5) 0 var(--e8);
+  }
+
+  .datos[hidden] {
+    display: none;
+  }
+
+  .total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: var(--e5);
+    margin-bottom: var(--e5);
+    border-bottom: 1px solid var(--hueso-borde);
+    font-size: 0.9375rem;
+  }
+
+  .total strong {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fila {
+    display: grid;
+    gap: var(--e4);
+  }
+
+  @media (min-width: 560px) {
+    .fila {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .campo {
+    margin-bottom: var(--e4);
+  }
+
+  .campo label {
+    display: block;
+    margin-bottom: var(--e2);
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .opcional {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .campo input,
+  .campo select,
+  .campo textarea {
+    width: 100%;
+    padding: var(--e3) var(--e4);
+    background: var(--hueso);
+    border: 1px solid var(--hueso-borde);
+    border-radius: var(--radio);
+    color: var(--tinta);
+    font: inherit;
+    font-size: 0.9375rem;
+  }
+
+  .campo textarea {
+    resize: vertical;
+  }
+
+  .campo input:focus,
+  .campo select:focus,
+  .campo textarea:focus {
+    border-color: var(--sage);
+    outline: none;
+  }
+
+  .enviar {
+    width: 100%;
+    margin-top: var(--e3);
+    padding: var(--e4) var(--e5);
+    background: var(--tinta);
+    border: none;
+    border-radius: 100px;
+    color: var(--hueso);
+    font-size: 0.9375rem;
+    transition: background var(--transicion);
+  }
+
+  .enviar:hover:not(:disabled) {
+    background: var(--sage-hondo);
+  }
+
+  .enviar:disabled {
+    background: var(--hueso-hondo);
+    color: var(--tinta-suave);
+    cursor: not-allowed;
+  }
+
+  .nota-pie {
+    margin: var(--e3) 0 0;
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+</style>
+
+<script>
+  import { leer, quitar, cambiarCantidad, total } from '../scripts/carrito.js';
+  import { formatearPrecio } from '../utils/formato.js';
+  import {
+    construirMensaje,
+    construirEnlace,
+    numeroPedido,
+  } from '../utils/whatsapp.js';
+
+  const contenedor = document.querySelector<HTMLElement>('[data-lineas]');
+  const formulario = document.querySelector<HTMLFormElement>('[data-formulario]');
+  const totalEl = document.querySelector<HTMLElement>('[data-total]');
+  const referenciaEl = document.querySelector<HTMLElement>('[data-referencia]');
+
+  // Se genera una vez por visita para que la referencia no cambie mientras
+  // la clienta completa sus datos.
+  const referencia = numeroPedido();
+  if (referenciaEl) referenciaEl.textContent = referencia;
+
+  function pintar() {
+    if (!contenedor || !formulario || !totalEl) return;
+
+    const lineas = leer();
+
+    if (lineas.length === 0) {
+      contenedor.innerHTML =
+        '<p class="vacio">Tu pedido está vacío. <a href="/">Ver el catálogo</a></p>';
+      formulario.hidden = true;
+      return;
+    }
+
+    contenedor.innerHTML = lineas
+      .map(
+        (l) => `
+        <article class="linea">
+          <div>
+            <h2 class="linea-nombre">${l.nombre}</h2>
+            <p class="linea-variante">Talla ${l.talla} · ${l.color}</p>
+          </div>
+          <span class="linea-precio">${formatearPrecio(l.precioUSD * l.cantidad)}</span>
+          <div class="linea-acciones">
+            <div class="cantidad">
+              <button type="button" data-menos="${l.clave}" aria-label="Quitar una unidad">−</button>
+              <span>${l.cantidad}</span>
+              <button type="button" data-mas="${l.clave}" aria-label="Agregar una unidad">+</button>
+            </div>
+            <button type="button" class="quitar" data-quitar="${l.clave}">Quitar</button>
+          </div>
+        </article>`
+      )
+      .join('');
+
+    totalEl.textContent = formatearPrecio(total(lineas));
+    formulario.hidden = false;
+  }
+
+  contenedor?.addEventListener('click', (evento) => {
+    const objetivo = (evento.target as HTMLElement).closest('button');
+    if (!objetivo) return;
+
+    const { menos, mas, quitar: aQuitar } = objetivo.dataset;
+
+    if (aQuitar) {
+      quitar(aQuitar);
+    } else if (menos || mas) {
+      const clave = (menos ?? mas) as string;
+      const actual = leer().find((l) => l.clave === clave)?.cantidad ?? 0;
+      cambiarCantidad(clave, actual + (mas ? 1 : -1));
+    }
+  });
+
+  formulario?.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+
+    const lineas = leer();
+    if (lineas.length === 0) return;
+
+    const datos = new FormData(formulario);
+    const mensaje = construirMensaje(lineas, {
+      numeroPedido: referencia,
+      nombre: datos.get('nombre'),
+      zona: datos.get('zona'),
+      pago: datos.get('pago'),
+      entrega: datos.get('entrega'),
+      nota: datos.get('nota'),
+    });
+
+    const enlace = construirEnlace(mensaje);
+    if (!enlace) return;
+
+    // location.href en lugar de window.open: en móvil el bloqueador de
+    // ventanas emergentes puede cancelar la apertura.
+    window.location.href = enlace;
+  });
+
+  document.addEventListener('carrito:cambio', pintar);
+  pintar();
+</script>

@@ -1,16 +1,24 @@
 ---
 import '../styles/global.css';
 import { MARCA } from '../config.js';
+import CarritoBoton from '../components/CarritoBoton.astro';
+import CarritoPanel from '../components/CarritoPanel.astro';
 
 interface Props {
   titulo?: string;
   descripcion?: string;
+  /** Ruta de imagen para la previsualización al compartir el enlace. */
+  imagen?: string | null;
 }
 
 const {
   titulo = `${MARCA.nombre} — ${MARCA.descripcion}`,
   descripcion = 'Catálogo de blusas. Elegí tu talla y color, armá tu pedido y envialo por WhatsApp.',
+  imagen = null,
 } = Astro.props;
+
+const urlCanonica = new URL(Astro.url.pathname, Astro.site);
+const urlImagen = imagen ? new URL(imagen, Astro.site) : null;
 ---
 
 <!doctype html>
@@ -21,10 +29,17 @@ const {
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <meta name="theme-color" content="#f7f4ed" />
+    <link rel="canonical" href={urlCanonica} />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={urlCanonica} />
+    {urlImagen && <meta property="og:image" content={urlImagen} />}
+    <meta
+      name="twitter:card"
+      content={urlImagen ? 'summary_large_image' : 'summary'}
+    />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,5 +50,7 @@ const {
   </head>
   <body>
     <slot />
+    <CarritoBoton />
+    <CarritoPanel />
   </body>
 </html>

@@ -1,0 +1,325 @@
+---
+/**
+ * Panel lateral con el pedido en curso.
+ *
+ * Contiene además la lógica compartida del carrito: mantiene sincronizado el
+ * contador del botón flotante y responde a cualquier elemento con
+ * `data-carrito-abrir`.
+ */
+---
+
+<dialog class="panel" data-carrito-panel aria-label="Tu pedido">
+  <header class="encabezado">
+    <h2 class="titulo">Tu pedido</h2>
+    <button type="button" class="cerrar" data-carrito-cerrar aria-label="Cerrar">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+  </header>
+
+  <div class="cuerpo" data-carrito-cuerpo></div>
+
+  <footer class="pie" data-carrito-pie hidden>
+    <div class="total">
+      <span>Total</span>
+      <strong data-carrito-total></strong>
+    </div>
+    <a href="/pedido" class="revisar">Revisar pedido</a>
+  </footer>
+</dialog>
+
+<style>
+  .panel {
+    width: min(420px, 100%);
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0 0 0 auto;
+    padding: 0;
+    background: var(--hueso);
+    border: none;
+    color: var(--tinta);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel::backdrop {
+    background: rgb(31 29 27 / 0.4);
+  }
+
+  .encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--e5);
+    border-bottom: 1px solid var(--hueso-borde);
+  }
+
+  .titulo {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+
+  .cerrar {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: var(--tinta-media);
+  }
+
+  .cerrar:hover {
+    background: var(--hueso-hondo);
+  }
+
+  .cuerpo {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--e4) var(--e5);
+  }
+
+  /* --- Estado vacío -------------------------------------------- */
+
+  .cuerpo :global(.vacio) {
+    padding: var(--e7) 0;
+    color: var(--tinta-suave);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  /* --- Líneas del pedido --------------------------------------- */
+
+  .cuerpo :global(.linea) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--e1) var(--e3);
+    padding: var(--e4) 0;
+    border-bottom: 1px solid var(--hueso-borde);
+  }
+
+  .cuerpo :global(.linea:last-child) {
+    border-bottom: none;
+  }
+
+  .cuerpo :global(.linea-nombre) {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .cuerpo :global(.linea-variante) {
+    margin: 2px 0 0;
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .cuerpo :global(.linea-precio) {
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .cuerpo :global(.linea-acciones) {
+    display: flex;
+    align-items: center;
+    gap: var(--e3);
+    margin-top: var(--e2);
+  }
+
+  .cuerpo :global(.cantidad) {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--hueso-borde);
+    border-radius: 100px;
+  }
+
+  .cuerpo :global(.cantidad button) {
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: var(--tinta-media);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .cuerpo :global(.cantidad button:hover) {
+    background: var(--hueso-hondo);
+    color: var(--tinta);
+  }
+
+  .cuerpo :global(.cantidad span) {
+    min-width: 24px;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .cuerpo :global(.quitar) {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cuerpo :global(.quitar:hover) {
+    color: var(--tinta);
+  }
+
+  /* --- Pie ------------------------------------------------------ */
+
+  .pie {
+    padding: var(--e4) var(--e5) var(--e5);
+    border-top: 1px solid var(--hueso-borde);
+  }
+
+  .pie[hidden] {
+    display: none;
+  }
+
+  .total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: var(--e4);
+    font-size: 0.875rem;
+  }
+
+  .total strong {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .revisar {
+    display: block;
+    padding: var(--e3) var(--e5);
+    background: var(--tinta);
+    color: var(--hueso);
+    font-size: 0.9375rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 100px;
+  }
+
+  .revisar:hover {
+    background: var(--sage-hondo);
+  }
+</style>
+
+<script>
+  import {
+    leer,
+    quitar,
+    cambiarCantidad,
+    total,
+    contarPiezas,
+  } from '../scripts/carrito.js';
+  import { formatearPrecio } from '../utils/formato.js';
+
+  const panel = document.querySelector<HTMLDialogElement>('[data-carrito-panel]');
+  const cuerpo = document.querySelector<HTMLElement>('[data-carrito-cuerpo]');
+  const pie = document.querySelector<HTMLElement>('[data-carrito-pie]');
+  const totalEl = document.querySelector<HTMLElement>('[data-carrito-total]');
+  const boton = document.querySelector<HTMLElement>('[data-carrito-abrir]');
+  const conteoEl = document.querySelector<HTMLElement>('[data-carrito-conteo]');
+
+  function pintar() {
+    const lineas = leer();
+    const piezas = contarPiezas(lineas);
+
+    // Contador del botón flotante
+    if (boton && conteoEl) {
+      conteoEl.textContent = String(piezas);
+      boton.hidden = piezas === 0;
+    }
+
+    if (!cuerpo || !pie || !totalEl) return;
+
+    if (lineas.length === 0) {
+      cuerpo.innerHTML = '<p class="vacio">Todavía no agregaste ninguna pieza.</p>';
+      pie.hidden = true;
+      return;
+    }
+
+    cuerpo.innerHTML = lineas
+      .map(
+        (l) => `
+        <article class="linea">
+          <div>
+            <h3 class="linea-nombre">${l.nombre}</h3>
+            <p class="linea-variante">Talla ${l.talla} · ${l.color}</p>
+          </div>
+          <span class="linea-precio">${formatearPrecio(l.precioUSD * l.cantidad)}</span>
+          <div class="linea-acciones">
+            <div class="cantidad">
+              <button type="button" data-menos="${l.clave}" aria-label="Quitar una unidad">−</button>
+              <span>${l.cantidad}</span>
+              <button type="button" data-mas="${l.clave}" aria-label="Agregar una unidad">+</button>
+            </div>
+            <button type="button" class="quitar" data-quitar="${l.clave}">Quitar</button>
+          </div>
+        </article>`
+      )
+      .join('');
+
+    totalEl.textContent = formatearPrecio(total(lineas));
+    pie.hidden = false;
+  }
+
+  cuerpo?.addEventListener('click', (evento) => {
+    const objetivo = (evento.target as HTMLElement).closest('button');
+    if (!objetivo) return;
+
+    const { menos, mas, quitar: aQuitar } = objetivo.dataset;
+    const lineas = leer();
+
+    if (aQuitar) quitar(aQuitar);
+    else if (menos || mas) {
+      const clave = (menos ?? mas) as string;
+      const actual = lineas.find((l) => l.clave === clave)?.cantidad ?? 0;
+      cambiarCantidad(clave, actual + (mas ? 1 : -1));
+    }
+  });
+
+  boton?.addEventListener('click', () => panel?.showModal());
+  document
+    .querySelector('[data-carrito-cerrar]')
+    ?.addEventListener('click', () => panel?.close());
+
+  // Cerrar al tocar fuera del panel
+  panel?.addEventListener('click', (evento) => {
+    if (evento.target === panel) panel.close();
+  });
+
+  document.addEventListener('carrito:cambio', pintar);
+  window.addEventListener('storage', pintar);
+  document.addEventListener('carrito:abrir', () => {
+    pintar();
+    panel?.showModal();
+  });
+
+  pintar();
+</script>

@@ -1,0 +1,453 @@
+---
+import Base from '../../layouts/Base.astro';
+import Flat from '../../components/Flat.astro';
+import productos from '../../data/productos.json';
+import { MARCA } from '../../config.js';
+import { formatearPrecio } from '../../utils/formato.js';
+
+export function getStaticPaths() {
+  return productos
+    .filter((p) => p.disponible)
+    .map((producto) => ({
+      params: { id: producto.id },
+      props: { producto },
+    }));
+}
+
+const { producto } = Astro.props;
+const agotado = producto.tallas.length === 0;
+const precio = formatearPrecio(producto.precioUSD);
+---
+
+<Base
+  titulo={`${producto.nombre} — ${MARCA.nombre}`}
+  descripcion={`${producto.descripcion} ${precio}`}
+  imagen={producto.imagen}
+>
+  <div class="envoltura">
+    <nav class="migas">
+      <a href="/">← Volver al catálogo</a>
+    </nav>
+
+    <article class="ficha" data-producto={JSON.stringify(producto)}>
+      <div class="lienzo">
+        {
+          producto.imagen ? (
+            <img src={producto.imagen} alt={producto.nombre} />
+          ) : (
+            <Flat categoria={producto.categoria} class="flat" />
+          )
+        }
+
+        {producto.etiqueta && <span class="distintivo">{producto.etiqueta}</span>}
+
+        <div class="colgante" aria-hidden="true">
+          <span class="cuerda"></span>
+          <span class="etiqueta"><span class="precio-etiqueta">{precio}</span></span>
+        </div>
+      </div>
+
+      <div class="detalle">
+        <h1 class="nombre">{producto.nombre}</h1>
+        <p class="precio">{precio}</p>
+        <p class="descripcion">{producto.descripcion}</p>
+
+        {
+          agotado ? (
+            <p class="agotado">Agotado por ahora. Escribinos y te avisamos cuando vuelva.</p>
+          ) : (
+            <form class="opciones" data-opciones>
+              <fieldset class="grupo">
+                <legend>Talla</legend>
+                <div class="chips">
+                  {producto.tallas.map((talla) => (
+                    <label class="chip">
+                      <input type="radio" name="talla" value={talla} />
+                      <span>{talla}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset class="grupo">
+                <legend>Color</legend>
+                <div class="chips">
+                  {producto.colores.map((color) => (
+                    <label class="chip chip-color">
+                      <input type="radio" name="color" value={color.nombre} />
+                      <span>
+                        <span class="muestra" style={`--muestra: ${color.hex}`} />
+                        {color.nombre}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset class="grupo">
+                <legend>Cantidad</legend>
+                <div class="cantidad">
+                  <button type="button" data-cantidad="-1" aria-label="Quitar una unidad">
+                    −
+                  </button>
+                  <output data-cantidad-valor>1</output>
+                  <button type="button" data-cantidad="1" aria-label="Agregar una unidad">
+                    +
+                  </button>
+                </div>
+              </fieldset>
+
+              <button type="submit" class="agregar" data-agregar disabled>
+                Elegí talla y color
+              </button>
+            </form>
+          )
+        }
+      </div>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .migas {
+    padding: var(--e5) 0 var(--e4);
+  }
+
+  .migas a {
+    color: var(--tinta-media);
+    font-size: 0.8125rem;
+    text-decoration: none;
+  }
+
+  .migas a:hover {
+    color: var(--tinta);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .ficha {
+    display: grid;
+    gap: var(--e5);
+    padding-bottom: var(--e8);
+  }
+
+  @media (min-width: 800px) {
+    .ficha {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--e7);
+      align-items: start;
+    }
+  }
+
+  /* --- Imagen --------------------------------------------------- */
+
+  .lienzo {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: var(--hueso-hondo);
+    border: 1px solid var(--hueso-borde);
+    border-radius: var(--radio);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .lienzo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .flat {
+    width: 58%;
+    color: var(--tinta-suave);
+  }
+
+  .distintivo {
+    position: absolute;
+    top: var(--e4);
+    left: var(--e4);
+    padding: 3px var(--e2);
+    background: var(--sage);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: var(--radio);
+  }
+
+  .colgante {
+    position: absolute;
+    top: 0;
+    right: var(--e6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: 50% 0;
+    transform: rotate(-3deg);
+  }
+
+  .cuerda {
+    width: 1px;
+    height: 32px;
+    background: var(--tinta-suave);
+    opacity: 0.55;
+  }
+
+  .etiqueta {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-width: 72px;
+    padding: 18px var(--e3) var(--e3);
+    background: var(--hueso);
+    border: 1px solid var(--hueso-borde);
+    clip-path: polygon(0 14%, 50% 0, 100% 14%, 100% 100%, 0 100%);
+  }
+
+  .etiqueta::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--hueso-hondo);
+    box-shadow: inset 0 0 0 1px var(--hueso-borde);
+  }
+
+  .precio-etiqueta {
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  /* --- Detalle -------------------------------------------------- */
+
+  .nombre {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .precio {
+    margin: var(--e2) 0 0;
+    font-family: var(--serif);
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+
+  .descripcion {
+    margin: var(--e3) 0 0;
+    max-width: 46ch;
+    color: var(--tinta-media);
+    font-size: 0.9375rem;
+  }
+
+  .agotado {
+    margin: var(--e5) 0 0;
+    padding: var(--e4);
+    background: var(--hueso-hondo);
+    border-radius: var(--radio);
+    color: var(--tinta-media);
+    font-size: 0.875rem;
+  }
+
+  /* --- Opciones ------------------------------------------------- */
+
+  .opciones {
+    margin-top: var(--e6);
+  }
+
+  .grupo {
+    margin: 0 0 var(--e5);
+    padding: 0;
+    border: none;
+  }
+
+  .grupo legend {
+    padding: 0;
+    margin-bottom: var(--e3);
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e2);
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip span {
+    display: flex;
+    align-items: center;
+    gap: var(--e2);
+    min-width: 44px;
+    padding: var(--e2) var(--e4);
+    background: transparent;
+    border: 1px solid var(--hueso-borde);
+    border-radius: 100px;
+    color: var(--tinta-media);
+    font-size: 0.875rem;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+      border-color var(--transicion),
+      background var(--transicion),
+      color var(--transicion);
+  }
+
+  .chip:hover span {
+    border-color: var(--sage);
+    color: var(--tinta);
+  }
+
+  .chip input:checked + span {
+    background: var(--tinta);
+    border-color: var(--tinta);
+    color: var(--hueso);
+  }
+
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--sage-hondo);
+    outline-offset: 3px;
+  }
+
+  .muestra {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--muestra);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18);
+  }
+
+  .cantidad {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--hueso-borde);
+    border-radius: 100px;
+  }
+
+  .cantidad button {
+    width: 38px;
+    height: 38px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: var(--tinta-media);
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+
+  .cantidad button:hover {
+    background: var(--hueso-hondo);
+    color: var(--tinta);
+  }
+
+  .cantidad output {
+    min-width: 30px;
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .agregar {
+    width: 100%;
+    padding: var(--e4) var(--e5);
+    background: var(--tinta);
+    border: none;
+    border-radius: 100px;
+    color: var(--hueso);
+    font-size: 0.9375rem;
+    transition: background var(--transicion);
+  }
+
+  .agregar:hover:not(:disabled) {
+    background: var(--sage-hondo);
+  }
+
+  .agregar:disabled {
+    background: var(--hueso-hondo);
+    color: var(--tinta-suave);
+    cursor: not-allowed;
+  }
+
+  @media (min-width: 800px) {
+    .agregar {
+      width: auto;
+      min-width: 260px;
+    }
+  }
+</style>
+
+<script>
+  import { agregar } from '../../scripts/carrito.js';
+
+  const ficha = document.querySelector<HTMLElement>('[data-producto]');
+  const formulario = document.querySelector<HTMLFormElement>('[data-opciones]');
+
+  if (ficha && formulario) {
+    const producto = JSON.parse(ficha.dataset.producto!);
+    const boton = formulario.querySelector<HTMLButtonElement>('[data-agregar]')!;
+    const valorCantidad =
+      formulario.querySelector<HTMLElement>('[data-cantidad-valor]')!;
+
+    let cantidad = 1;
+
+    const elegido = (campo: string) =>
+      formulario.querySelector<HTMLInputElement>(`input[name="${campo}"]:checked`)
+        ?.value ?? null;
+
+    function refrescar() {
+      const listo = Boolean(elegido('talla') && elegido('color'));
+      boton.disabled = !listo;
+      boton.textContent = listo ? 'Agregar al pedido' : 'Elegí talla y color';
+    }
+
+    formulario.addEventListener('change', refrescar);
+
+    formulario.addEventListener('click', (evento) => {
+      const paso = (evento.target as HTMLElement).closest<HTMLElement>(
+        '[data-cantidad]'
+      );
+      if (!paso) return;
+
+      cantidad = Math.min(Math.max(cantidad + Number(paso.dataset.cantidad), 1), 99);
+      valorCantidad.textContent = String(cantidad);
+    });
+
+    formulario.addEventListener('submit', (evento) => {
+      evento.preventDefault();
+
+      const talla = elegido('talla');
+      const color = elegido('color');
+      if (!talla || !color) return;
+
+      agregar({
+        id: producto.id,
+        nombre: producto.nombre,
+        precioUSD: producto.precioUSD,
+        talla,
+        color,
+        cantidad,
+      });
+
+      document.dispatchEvent(new CustomEvent('carrito:abrir'));
+    });
+
+    refrescar();
+  }
+</script>

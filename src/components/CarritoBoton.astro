@@ -1,0 +1,73 @@
+---
+/**
+ * Botón flotante que abre el pedido en curso.
+ * Arranca oculto y se revela solo si hay piezas — lo maneja CarritoPanel.
+ */
+---
+
+<button
+  type="button"
+  class="boton-carrito"
+  data-carrito-abrir
+  hidden
+  aria-label="Ver mi pedido"
+>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+    <path d="M3 6h18" />
+    <path d="M16 10a4 4 0 0 1-8 0" />
+  </svg>
+  <span class="conteo" data-carrito-conteo>0</span>
+</button>
+
+<style>
+  .boton-carrito {
+    position: fixed;
+    right: var(--e5);
+    bottom: var(--e5);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: var(--e2);
+    padding: var(--e3) var(--e4);
+    background: var(--tinta);
+    color: var(--hueso);
+    border: none;
+    border-radius: 100px;
+    box-shadow: 0 6px 20px rgb(31 29 27 / 0.22);
+    transition: transform var(--transicion);
+  }
+
+  .boton-carrito[hidden] {
+    display: none;
+  }
+
+  .boton-carrito:hover {
+    transform: translateY(-2px);
+  }
+
+  .conteo {
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boton-carrito {
+      transition: none;
+    }
+    .boton-carrito:hover {
+      transform: none;
+    }
+  }
+</style>
