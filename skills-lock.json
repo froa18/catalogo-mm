@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "skills": {
+    "ss-a11y": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-a11y/SKILL.md",
+      "computedHash": "4bfe4fe8124af349d933804bdf9d9771026842023dfa59dee1440696e9e8d996"
+    },
+    "ss-audit": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-audit/SKILL.md",
+      "computedHash": "2565d4659134a793a5a8872f599928e95d506baad4a75534fa82e2bab7db3094"
+    },
+    "ss-build": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-build/SKILL.md",
+      "computedHash": "711ae2d5cb36d363a2d55dd5863ba7a0d335cc431fa47f0247b88790bb2a1976"
+    },
+    "ss-component": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-component/SKILL.md",
+      "computedHash": "555bd5bbd185ff36dfc63246cc528467af8d8b7f5d9f1231233f24b9f6fa77b0"
+    },
+    "ss-copy": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-copy/SKILL.md",
+      "computedHash": "5bb2a7ccb2b9c4e89bb63d07c9fd58ec16e5c9407510cd36634f916c25bbbf67"
+    },
+    "ss-dial": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-dial/SKILL.md",
+      "computedHash": "f4d95a985333dd4718cdf1abff2fcbeb0bde6e192e6fbf362fd17f8bd7d13756"
+    },
+    "ss-feedback": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-feedback/SKILL.md",
+      "computedHash": "d80b9056e40e9a25c7c7ff5cf413926d42e9501e82c443b531052a3a90ad03b8"
+    },
+    "ss-flow": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-flow/SKILL.md",
+      "computedHash": "0a703b436bd57cd6499620a6ad64491251433eb795e9811fb9369fdc82d59714"
+    },
+    "ss-lint": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-lint/SKILL.md",
+      "computedHash": "a2967cd3a787681bbff5b9aae6509d54f4d5444e668af8f3ae1bdffbf1cf9a60"
+    },
+    "ss-motion": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-motion/SKILL.md",
+      "computedHash": "1dd54c641e500544e403ef97f425448d12e83924f90a2a99e5295a991870646d"
+    },
+    "ss-page": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-page/SKILL.md",
+      "computedHash": "945d42a1d6ff8817a4a6599ab78d767c2c07a801edc045c12b3bb1e8601878ab"
+    },
+    "ss-pattern": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-pattern/SKILL.md",
+      "computedHash": "49064249901152fef7fb23ae1df50515c4defa0c6671e32ffacd032c7a9134c7"
+    },
+    "ss-reference": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-reference/SKILL.md",
+      "computedHash": "beab25871979c1dbe4747bfca62a022c0cd23cd4b8f77497bb2eb1d96f8ca5ad"
+    },
+    "ss-resolve": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-resolve/SKILL.md",
+      "computedHash": "77b16565cac1efdffbad2f3adeab6e9e5720fb565557f1fa242d65b2335a972f"
+    },
+    "ss-restyle": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-restyle/SKILL.md",
+      "computedHash": "1f4d3f4055f8deafe85e3805730821e4116fc07540b0fb2004e578b6949635ef"
+    },
+    "ss-review": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-review/SKILL.md",
+      "computedHash": "90028717cc04458a441cb95d89460a64221938e4c80a2043da1540a83ef68eed"
+    },
+    "ss-score": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-score/SKILL.md",
+      "computedHash": "d24ac74c53f3dd844d11738567299b085dfcd0e4aed4e88c9f7e28e94ebebfbb"
+    },
+    "ss-setup": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-setup/SKILL.md",
+      "computedHash": "33e653fa655b737a77f0bdcaf8560916a76b694810e08a975a21d0aa6ee155b5"
+    },
+    "ss-studio": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-studio/SKILL.md",
+      "computedHash": "e0ede15ef1a62068bac26f71359586970f43d59aec3825dcf9907dc659f5fc45"
+    },
+    "ss-tokens": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-tokens/SKILL.md",
+      "computedHash": "d519b667849cf236a82905b8751471c62364e1dbc457141f93c6cb32d0aec40e"
+    },
+    "ss-update": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-update/SKILL.md",
+      "computedHash": "5d0690eaba5ed66d04fb79f7af14c137b2f2391d7c12fe32a2dddcd66f41b7d4"
+    },
+    "ss-verify": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/ss-verify/SKILL.md",
+      "computedHash": "4e93b07703eefddb2d8e9468890ad4e3249771610288fe88919d75b37edf29d7"
+    },
+    "styleseed": {
+      "source": "bitjaru/styleseed",
+      "sourceType": "github",
+      "skillPath": "skills/styleseed/SKILL.md",
+      "computedHash": "46d14c3a01c2a23aca34723e16a5ecd5bdaafbe3d163414a5b13e21456b0cf9a"
+    }
+  }
+}

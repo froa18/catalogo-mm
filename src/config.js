@@ -23,10 +23,10 @@ export const WHATSAPP = {
    * Se define en `.env` (ver `.env.example`), que está excluido del repo, y
    * en las variables de entorno de Vercel al desplegar.
    */
-  numero: import.meta.env.PUBLIC_WHATSAPP_NUMERO ?? '',
+  numero: import.meta.env?.PUBLIC_WHATSAPP_NUMERO ?? '',
 
   // Encabezado del mensaje que se genera al enviar el pedido.
-  saludo: 'Hola! Quiero pedir:',
+  saludo: 'Hola! Quiero hacer este pedido 🌸',
 };
 
 export const MONEDA = {

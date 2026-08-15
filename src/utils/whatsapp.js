@@ -11,41 +11,59 @@ export function numeroPedido(fecha = new Date()) {
   return `MM-${String(fecha.getTime()).slice(-4)}`;
 }
 
+const SEPARADOR = '━━━━━━━━━━━';
+
 /**
- * Arma el texto del pedido. Los campos vacíos se omiten para que no lleguen
- * líneas huérfanas del tipo "Zona:" sin nada al lado.
+ * Arma el texto del pedido, un bloque por pieza.
+ *
+ * Usa el formato de WhatsApp — *negrita* e _cursiva_ — para dar jerarquía:
+ * en pantalla chica, un bloque de texto plano es difícil de leer de un
+ * vistazo. Los campos vacíos se omiten para que no lleguen líneas huérfanas.
  */
 export function construirMensaje(lineas, datos = {}) {
   const partes = [];
   const referencia = datos.numeroPedido ?? numeroPedido();
 
-  partes.push(`${WHATSAPP.saludo} (${referencia})`);
+  partes.push(WHATSAPP.saludo);
   partes.push('');
 
   for (const l of lineas) {
     const subtotal = formatearPrecio(l.precioUSD * l.cantidad);
+
+    partes.push(`*${l.nombre}*`);
+    partes.push(`Talla ${l.talla} · Color ${l.color}`);
+
+    // Con más de una pieza se muestra el unitario, para que quede claro de
+    // dónde sale el subtotal.
     partes.push(
-      `- ${l.nombre}, talla ${l.talla}, color ${l.color} x${l.cantidad} — ${subtotal}`
+      l.cantidad === 1
+        ? `1 pieza — ${subtotal}`
+        : `${l.cantidad} piezas × ${formatearPrecio(l.precioUSD)} — ${subtotal}`
     );
+    partes.push('');
   }
 
-  partes.push('');
-  partes.push(`Total: ${formatearPrecio(total(lineas))}`);
+  partes.push(SEPARADOR);
+  partes.push(`*TOTAL: ${formatearPrecio(total(lineas))}*`);
 
   const extras = [
-    ['Nombre', datos.nombre],
-    ['Zona', datos.zona],
-    ['Pago', datos.pago],
-    ['Entrega', datos.entrega],
-    ['Nota', datos.nota],
+    ['👤', datos.nombre],
+    ['📍', datos.zona],
+    ['💳', datos.pago],
+    ['🚚', datos.entrega],
+    ['📝', datos.nota],
   ].filter(([, valor]) => valor && String(valor).trim());
 
   if (extras.length) {
     partes.push('');
-    for (const [etiqueta, valor] of extras) {
-      partes.push(`${etiqueta}: ${String(valor).trim()}`);
+    partes.push('*Mis datos*');
+    for (const [icono, valor] of extras) {
+      partes.push(`${icono} ${String(valor).trim()}`);
     }
   }
+
+  partes.push('');
+  partes.push(`_Ref. ${referencia}_`);
 
   return partes.join('\n');
 }
