@@ -45,17 +45,17 @@ export function construirMensaje(lineas, datos = {}) {
   }
 
   const extras = [
-    ['👤', datos.nombre],
-    ['📍', datos.zona],
-    ['💳', datos.pago],
-    ['🚚', datos.entrega],
-    ['📝', datos.nota],
+    ['Nombre', datos.nombre],
+    ['Ubicación', datos.zona],
+    ['Método de pago', datos.pago],
+    ['Método de entrega', datos.entrega],
+    ['Nota', datos.nota],
   ].filter(([, valor]) => valor && String(valor).trim());
 
   if (extras.length) {
     partes.push('*Mis datos*');
-    for (const [icono, valor] of extras) {
-      partes.push(`${icono} ${String(valor).trim()}`);
+    for (const [etiqueta, valor] of extras) {
+      partes.push(`${etiqueta}: ${String(valor).trim()}`);
     }
     partes.push('');
   }
