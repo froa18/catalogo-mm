@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // Se ajusta al dominio real cuando se despliegue en Vercel (fase 3).
-  site: 'https://catalogo-mm.vercel.app',
+  // Dominio de producción. Se usa para las URL canónicas y los metadatos
+  // Open Graph, que definen cómo se ve el enlace al compartirlo.
+  site: 'https://catalogo-mm-xi.vercel.app',
 });
