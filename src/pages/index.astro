@@ -1,0 +1,40 @@
+---
+import productos from '../data/productos.json';
+import { MARCA, MONEDA, CATEGORIAS } from '../config.js';
+
+// Provisional: verifica que los datos cargan correctamente.
+// La grilla con el diseño de marca se construye en la fase 2.
+const visibles = productos
+  .filter((p) => p.disponible)
+  .sort((a, b) => a.orden - b.orden);
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{MARCA.nombre} — {MARCA.descripcion}</title>
+  </head>
+  <body>
+    <h1>{MARCA.nombre}</h1>
+    <p>Estructura de datos cargando correctamente. {visibles.length} productos.</p>
+
+    <p>Categorías: {CATEGORIAS.map((c) => c.nombre).join(' · ')}</p>
+
+    <ul>
+      {
+        visibles.map((p) => (
+          <li>
+            <strong>{p.nombre}</strong> — {MONEDA.simbolo}
+            {p.precioUSD.toFixed(MONEDA.decimales)}
+            <br />
+            Tallas: {p.tallas.join(', ')}
+            <br />
+            Colores: {p.colores.map((c) => c.nombre).join(', ')}
+            {p.etiqueta && <em> · {p.etiqueta}</em>}
+          </li>
+        ))
+      }
+    </ul>
+  </body>
+</html>

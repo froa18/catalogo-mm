@@ -12,16 +12,63 @@ Sin checkout, sin pasarela de pago. El cierre de venta sigue siendo conversacion
 
 ## Estado
 
-Fase 0 — repositorio inicializado. El sitio todavía no está construido.
+Fase 1 — proyecto Astro montado y datos semilla cargados. Falta construir la
+interfaz.
 
 | Fase | Contenido | Estado |
 |---|---|---|
-| 0 | Repositorio y estructura base | En curso |
-| 1 | Esquema de producto y datos semilla | Pendiente |
+| 0 | Repositorio y estructura base | ✅ |
+| 1 | Esquema de producto y datos semilla | ✅ |
 | 2 | Sitio funcional: catálogo, ficha, carrito, WhatsApp | Pendiente |
 | 3 | Deploy en Vercel | Pendiente |
 | 4 | Panel de edición con Sanity | Pendiente |
 | 5 | Fotos reales y lanzamiento | Pendiente |
+
+## Cómo correrlo
+
+```bash
+npm install      # solo la primera vez
+npm run dev      # abre el sitio en http://localhost:4321
+npm run build    # genera el sitio listo para publicar
+```
+
+## Estructura
+
+```
+src/
+├─ config.js           → marca, WhatsApp, moneda, categorías
+├─ data/
+│  └─ productos.json   → el catálogo (se migra a Sanity en la fase 4)
+└─ pages/
+   └─ index.astro      → la página del catálogo
+```
+
+### Esquema de un producto
+
+```json
+{
+  "id": "blusa-aurora",
+  "nombre": "Blusa Aurora",
+  "descripcion": "Manga larga con caída suave y puño abierto.",
+  "categoria": "manga-larga",
+  "precioUSD": 22,
+  "tallas": ["S", "M", "L"],
+  "colores": [{ "nombre": "Negro", "hex": "#1F1D1B" }],
+  "imagen": null,
+  "disponible": true,
+  "etiqueta": "Nuevo",
+  "orden": 1
+}
+```
+
+| Campo | Para qué sirve |
+|---|---|
+| `precioUSD` | Precio en dólares. Ver decisión 8 en `docs/decisiones.md` |
+| `tallas` | Se elimina una talla del arreglo cuando se agota |
+| `colores` | El `hex` permite mostrar el color real en el selector |
+| `disponible` | En `false` oculta el producto completo |
+| `etiqueta` | Distintivo opcional: `"Nuevo"`, `"Últimas piezas"` |
+| `orden` | Posición en la grilla |
 
 ## Cómo está pensado
 

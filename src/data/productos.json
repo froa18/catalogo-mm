@@ -1,0 +1,83 @@
+[
+  {
+    "id": "blusa-aurora",
+    "nombre": "Blusa Aurora",
+    "descripcion": "Manga larga con caída suave y puño abierto.",
+    "categoria": "manga-larga",
+    "precioUSD": 22,
+    "tallas": ["S", "M", "L"],
+    "colores": [
+      { "nombre": "Negro", "hex": "#1F1D1B" },
+      { "nombre": "Blanco", "hex": "#F4F1EA" }
+    ],
+    "imagen": null,
+    "disponible": true,
+    "etiqueta": "Nuevo",
+    "orden": 1
+  },
+  {
+    "id": "blusa-vela",
+    "nombre": "Blusa Vela",
+    "descripcion": "Corte holgado en lino liviano, ideal para clima cálido.",
+    "categoria": "sin-mangas",
+    "precioUSD": 18,
+    "tallas": ["S", "M"],
+    "colores": [
+      { "nombre": "Lino", "hex": "#D9CFC0" },
+      { "nombre": "Arena", "hex": "#C4AE95" }
+    ],
+    "imagen": null,
+    "disponible": true,
+    "etiqueta": null,
+    "orden": 2
+  },
+  {
+    "id": "blusa-mar",
+    "nombre": "Blusa Mar",
+    "descripcion": "Manga corta con escote redondo y espalda cruzada.",
+    "categoria": "manga-corta",
+    "precioUSD": 20,
+    "tallas": ["S", "M", "L", "XL"],
+    "colores": [
+      { "nombre": "Sage", "hex": "#8A9A7B" },
+      { "nombre": "Blanco", "hex": "#F4F1EA" }
+    ],
+    "imagen": null,
+    "disponible": true,
+    "etiqueta": null,
+    "orden": 3
+  },
+  {
+    "id": "blusa-sol",
+    "nombre": "Blusa Sol",
+    "descripcion": "Sin mangas, cuello alto y botones forrados al tono.",
+    "categoria": "sin-mangas",
+    "precioUSD": 16,
+    "tallas": ["M", "L"],
+    "colores": [
+      { "nombre": "Terracota", "hex": "#B5715A" },
+      { "nombre": "Arena", "hex": "#C4AE95" }
+    ],
+    "imagen": null,
+    "disponible": true,
+    "etiqueta": "Últimas piezas",
+    "orden": 4
+  },
+  {
+    "id": "blusa-duna",
+    "nombre": "Blusa Duna",
+    "descripcion": "Manga larga abullonada con puño elástico.",
+    "categoria": "manga-larga",
+    "precioUSD": 25,
+    "tallas": ["S", "M", "L"],
+    "colores": [
+      { "nombre": "Negro", "hex": "#1F1D1B" },
+      { "nombre": "Sage", "hex": "#8A9A7B" },
+      { "nombre": "Lino", "hex": "#D9CFC0" }
+    ],
+    "imagen": null,
+    "disponible": true,
+    "etiqueta": null,
+    "orden": 5
+  }
+]

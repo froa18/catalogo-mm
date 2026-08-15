@@ -143,11 +143,99 @@ también paletas de temporada).
 
 ---
 
+## 7. Astro como generador del sitio
+
+**Decidido.** El sitio se construye con Astro (versión 7.2 al momento de
+decidirlo).
+
+Motivos:
+
+- Genera HTML plano, sin peso de aplicación. Es lo que más importa para un
+  catálogo que se abre desde Instagram, en móvil y muchas veces con mala
+  conexión.
+- Trae optimización de imágenes incorporada.
+- Tiene integración oficial con Sanity, así que la fase 4 no requiere construir
+  la conexión desde cero.
+- El diseño de "una blusa" se escribe una sola vez y sirve para todo el
+  catálogo.
+
+**Contrapartida asumida:** existe un paso de construcción; el sitio se arma
+antes de publicarse. Requiere Node, ya presente en el entorno.
+
+---
+
+## 8. El precio se guarda en dólares
+
+**Decidido.** Cada producto almacena un único precio, en USD. El mercado es
+Venezuela.
+
+La razón es de mantenimiento, no de preferencia: fijando los precios en
+bolívares, cada movimiento de la tasa obligaría a reeditar el catálogo
+completo, producto por producto. Guardándolos en dólares, la tasa se mueve y
+**no se toca ningún precio**.
+
+---
+
+## 9. Bolívares con tasa automática — APLAZADO
+
+**Aplazado, no descartado.** El sitio arranca mostrando solo dólares. Esta
+sección conserva el diseño de la solución para retomarla sin volver a
+investigar.
+
+### Qué se quiere
+
+Mostrar cada precio en USD y su equivalente en bolívares, actualizado
+automáticamente, sin edición manual.
+
+### Decisión abierta: cuál tasa
+
+Es una decisión de negocio, no técnica:
+
+- **BCV** — oficial del Banco Central, la que corresponde para facturación
+  formal.
+- **Paralelo** — referencia de mercado, habitualmente más alta.
+
+Conviene dejarla configurable desde el panel para poder cambiarla sin
+intervención de desarrollo.
+
+### Arquitectura prevista
+
+La tasa se consulta **cuando la clienta carga el catálogo**, no en el momento
+de publicar. Así el bolívar mostrado es el del día aunque el sitio lleve
+semanas sin republicarse.
+
+Si la consulta falla, se usa la última tasa conocida horneada en el build,
+señalando su antigüedad. El catálogo nunca queda sin precios: en el peor caso
+muestra dólares y un bolívar marcado como desactualizado.
+
+Entre el sitio y la API se interpone una función en Vercel que cachea la tasa
+**una hora**. El motivo es concreto: el plan gratuito de Cotizave da 1.500
+consultas mensuales. Consultando directo desde cada visita, 1.500 visitas
+agotarían el servicio. Con caché de una hora son ~720 consultas al mes en
+total, sin importar el volumen de tráfico.
+
+### APIs verificadas (agosto 2026)
+
+| Servicio | Cobertura | Costo |
+|---|---|---|
+| [Cotizave](https://cotizave.com/) | BCV, paralelo, USDT/VES. Actualiza cada 25 min, incluye `updated_at` | Gratis, 1.500 consultas/mes |
+| [PyDolarVenezuela](https://docs.pydolarve.org/) | BCV y varios monitores | Gratis |
+| [BCV API](https://www.bcvapi.tech/) | Solo tasa oficial BCV | Gratis |
+
+### Resguardos para el negocio
+
+- El monto en bolívares se muestra como **referencial**, acompañado de la tasa
+  usada y su hora: *"Bs. 24.500 — tasa BCV del 15/08, 9:00 a.m."* Si la tasa se
+  mueve entre la consulta y el pago, queda registro de lo que la clienta vio.
+- El mensaje de WhatsApp incluye ambos montos, la tasa aplicada y su hora, para
+  que no haya ambigüedad entre las partes.
+
+---
+
 ## Decisiones pendientes
 
+- [ ] Cuál tasa de cambio se usa (BCV o paralela) — ver decisión 9
 - [ ] Alcance de las palancas del panel
 - [ ] Número de WhatsApp para recibir pedidos
-- [ ] Moneda y formato de precio
 - [ ] Si el carrito incluye un paso de revisión y si pide nombre y zona de entrega
-- [ ] Stack del sitio (generador estático)
 - [ ] Nombre de marca y logotipo
