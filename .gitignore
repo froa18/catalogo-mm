@@ -25,3 +25,6 @@ npm-debug.log*
 # Editores
 .vscode/
 .idea/
+
+# Herramientas del entorno de desarrollo, ajenas al proyecto
+skills-lock.json
