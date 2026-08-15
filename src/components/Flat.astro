@@ -1,0 +1,75 @@
+---
+/**
+ * Boceto técnico de moda (flat) usado como marcador de posición mientras
+ * no hay fotografía del producto. Se reemplaza por <img> en la fase 5.
+ *
+ * Hay un dibujo por categoría para que la silueta comunique el tipo de
+ * prenda aunque no haya foto.
+ */
+interface Props {
+  categoria: string;
+  class?: string;
+}
+
+const { categoria, class: clase } = Astro.props;
+---
+
+<svg
+  class={clase}
+  viewBox="0 0 200 250"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+  role="presentation"
+>
+  <g
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    {
+      categoria === 'manga-larga' && (
+        <>
+          {/* Manga izquierda */}
+          <path d="M64 44 L30 62 L20 158 L46 164 L60 92" />
+          {/* Manga derecha */}
+          <path d="M136 44 L170 62 L180 158 L154 164 L140 92" />
+          {/* Puños */}
+          <path d="M21 150 L47 156" opacity="0.5" />
+          <path d="M179 150 L153 156" opacity="0.5" />
+        </>
+      )
+    }
+    {
+      categoria === 'manga-corta' && (
+        <>
+          <path d="M64 44 L32 64 L40 112 L62 104" />
+          <path d="M136 44 L168 64 L160 112 L138 104" />
+          <path d="M39 104 L61 96" opacity="0.5" />
+          <path d="M161 104 L139 96" opacity="0.5" />
+        </>
+      )
+    }
+    {
+      categoria === 'sin-mangas' && (
+        <>
+          {/* Sisa marcada */}
+          <path d="M64 44 Q54 70 60 96" />
+          <path d="M136 44 Q146 70 140 96" />
+        </>
+      )
+    }
+
+    {/* Cuerpo — común a todas las siluetas */}
+    <path d="M64 44 L60 96 L58 214 L142 214 L140 96 L136 44" />
+
+    {/* Escote */}
+    <path d="M64 44 Q78 38 82 40 Q100 58 118 40 Q122 38 136 44" />
+    <path d="M84 46 Q100 62 116 46" opacity="0.4" />
+
+    {/* Caída del cuerpo */}
+    <path d="M100 70 L100 208" opacity="0.15" />
+    <path d="M58 206 L142 206" opacity="0.35" />
+  </g>
+</svg>

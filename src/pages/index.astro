@@ -1,40 +1,215 @@
 ---
+import Base from '../layouts/Base.astro';
+import ProductoCard from '../components/ProductoCard.astro';
 import productos from '../data/productos.json';
-import { MARCA, MONEDA, CATEGORIAS } from '../config.js';
+import { MARCA, CATEGORIAS } from '../config.js';
 
-// Provisional: verifica que los datos cargan correctamente.
-// La grilla con el diseño de marca se construye en la fase 2.
 const visibles = productos
   .filter((p) => p.disponible)
   .sort((a, b) => a.orden - b.orden);
+
+// Solo se muestran los filtros que tienen piezas detrás.
+const categoriasConPiezas = CATEGORIAS.filter(
+  (c) => c.id === 'todas' || visibles.some((p) => p.categoria === c.id)
+);
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{MARCA.nombre} — {MARCA.descripcion}</title>
-  </head>
-  <body>
-    <h1>{MARCA.nombre}</h1>
-    <p>Estructura de datos cargando correctamente. {visibles.length} productos.</p>
+<Base>
+  <header class="cabecera">
+    <div class="envoltura">
+      <h1 class="marca">{MARCA.nombre}</h1>
+      <p class="lema">{MARCA.descripcion}</p>
+    </div>
+  </header>
 
-    <p>Categorías: {CATEGORIAS.map((c) => c.nombre).join(' · ')}</p>
+  <nav class="filtros" aria-label="Filtrar por categoría">
+    <div class="envoltura">
+      <ul class="chips">
+        {
+          categoriasConPiezas.map((c, i) => (
+            <li>
+              <button
+                type="button"
+                class="chip"
+                data-filtro={c.id}
+                aria-pressed={i === 0 ? 'true' : 'false'}
+              >
+                {c.nombre}
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </nav>
 
-    <ul>
-      {
-        visibles.map((p) => (
-          <li>
-            <strong>{p.nombre}</strong> — {MONEDA.simbolo}
-            {p.precioUSD.toFixed(MONEDA.decimales)}
-            <br />
-            Tallas: {p.tallas.join(', ')}
-            <br />
-            Colores: {p.colores.map((c) => c.nombre).join(', ')}
-            {p.etiqueta && <em> · {p.etiqueta}</em>}
-          </li>
-        ))
-      }
-    </ul>
-  </body>
-</html>
+  <main class="envoltura">
+    <p class="conteo" data-conteo>
+      {visibles.length}
+      {visibles.length === 1 ? 'pieza' : 'piezas'}
+    </p>
+
+    <div class="grilla" data-grilla>
+      {visibles.map((producto) => <ProductoCard producto={producto} />)}
+    </div>
+  </main>
+
+  <footer class="pie">
+    <div class="envoltura">
+      <p>Los precios pueden variar. Confirmá disponibilidad al hacer tu pedido.</p>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  /* --- Cabecera ------------------------------------------------ */
+
+  .cabecera {
+    padding-top: var(--e7);
+    padding-bottom: var(--e5);
+    text-align: center;
+  }
+
+  .marca {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.25rem, 9vw, 3.25rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .lema {
+    margin: var(--e2) 0 0;
+    color: var(--tinta-suave);
+    font-size: 0.8125rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* --- Filtros ------------------------------------------------- */
+
+  .filtros {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--hueso) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hueso-borde);
+  }
+
+  .chips {
+    display: flex;
+    gap: var(--e2);
+    margin: 0;
+    padding: var(--e3) 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    padding: var(--e2) var(--e4);
+    background: transparent;
+    border: 1px solid var(--hueso-borde);
+    border-radius: 100px;
+    color: var(--tinta-media);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    transition:
+      background var(--transicion),
+      border-color var(--transicion),
+      color var(--transicion);
+  }
+
+  .chip:hover {
+    border-color: var(--sage);
+    color: var(--tinta);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--tinta);
+    border-color: var(--tinta);
+    color: var(--hueso);
+  }
+
+  /* --- Grilla -------------------------------------------------- */
+
+  .conteo {
+    margin: var(--e5) 0 var(--e4);
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .grilla {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--e5) var(--e4);
+    padding-bottom: var(--e8);
+  }
+
+  @media (min-width: 640px) {
+    .grilla {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--e6) var(--e5);
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .grilla {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* --- Pie ----------------------------------------------------- */
+
+  .pie {
+    padding: var(--e5) 0 var(--e7);
+    border-top: 1px solid var(--hueso-borde);
+  }
+
+  .pie p {
+    margin: 0;
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const grilla = document.querySelector<HTMLElement>('[data-grilla]');
+  const conteo = document.querySelector<HTMLElement>('[data-conteo]');
+
+  if (grilla && conteo) {
+    const tarjetas = Array.from(
+      grilla.querySelectorAll<HTMLElement>('[data-categoria]')
+    );
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const filtro = chip.dataset.filtro;
+
+        chips.forEach((otro) =>
+          otro.setAttribute('aria-pressed', String(otro === chip))
+        );
+
+        let visibles = 0;
+        tarjetas.forEach((tarjeta) => {
+          const coincide =
+            filtro === 'todas' || tarjeta.dataset.categoria === filtro;
+          tarjeta.hidden = !coincide;
+          if (coincide) visibles++;
+        });
+
+        conteo.textContent = `${visibles} ${visibles === 1 ? 'pieza' : 'piezas'}`;
+      });
+    });
+  }
+</script>
