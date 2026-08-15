@@ -12,17 +12,23 @@ Sin checkout, sin pasarela de pago. El cierre de venta sigue siendo conversacion
 
 ## Estado
 
-Fase 1 — proyecto Astro montado y datos semilla cargados. Falta construir la
-interfaz.
+Fase 2 — el flujo de compra funciona de punta a punta como **borrador**:
+catálogo, ficha, carrito y armado del pedido. Pendiente de pulido y de
+configurar el número de WhatsApp.
 
 | Fase | Contenido | Estado |
 |---|---|---|
 | 0 | Repositorio y estructura base | ✅ |
 | 1 | Esquema de producto y datos semilla | ✅ |
-| 2 | Sitio funcional: catálogo, ficha, carrito, WhatsApp | Pendiente |
+| 2 | Sitio funcional: catálogo, ficha, carrito, WhatsApp | ✅ borrador |
 | 3 | Deploy en Vercel | Pendiente |
 | 4 | Panel de edición con Sanity | Pendiente |
 | 5 | Fotos reales y lanzamiento | Pendiente |
+
+### Bloqueante para publicar
+
+`WHATSAPP.numero` en `src/config.js` está vacío. Hasta definirlo, la pantalla
+de pedido arma el mensaje pero no puede enviarlo, y lo advierte en la interfaz.
 
 ## Cómo correrlo
 
