@@ -70,24 +70,29 @@ const [primera, segunda] = MARCA.nombre.split(' ');
 
   /* --- Monograma: las dos emes superpuestas --------------------- */
 
+  /* Dos emes: la grande recta en rosa, y encima una menor en cursiva vino,
+     corrida hacia abajo y a la derecha, como en el logotipo. */
   .monograma {
     display: flex;
-    align-items: flex-end;
+    align-items: baseline;
     font-family: var(--display);
     font-size: clamp(3.5rem, 15vw, 5.25rem);
     font-weight: 500;
-    line-height: 0.82;
+    line-height: 1;
   }
 
   .eme-rosa {
-    color: var(--acento);
+    /* El rosa del logotipo es más apagado que el de los botones */
+    color: color-mix(in srgb, var(--acento) 76%, var(--hueso-hondo));
   }
 
   .eme-vino {
-    /* Menor y encimada, como en el logotipo */
-    margin-left: -0.34em;
+    margin-left: -0.5em;
     font-size: 0.76em;
+    font-style: italic;
     color: var(--acento-hondo);
+    /* Baja por debajo de la línea de la eme grande */
+    transform: translateY(0.3em);
   }
 
   /* --- Nombre entre filetes ------------------------------------- */
