@@ -13,6 +13,27 @@ export const MARCA = {
   descripcion: 'Blusas',
 };
 
+/**
+ * Tira de aviso sobre la barra de navegación. Se va con el scroll.
+ * Poner `activo: false` la quita sin tocar el diseño.
+ */
+export const ANUNCIO = {
+  activo: true,
+  texto: 'Pedidos por WhatsApp · Envíos a todo el país',
+};
+
+/**
+ * Carrusel de la portada: una selección curada, no todo el catálogo.
+ * El orden de `ids` es el orden en que se muestran; los que no existan o
+ * estén ocultos se ignoran solos.
+ */
+export const DESTACADOS = {
+  titulo: 'Básicos para todos los días',
+  descripcion:
+    'Las piezas que se repiten en el armario: cortes simples, telas livianas y colores que combinan con lo que ya tenés.',
+  ids: ['blusa-aurora', 'blusa-mar', 'blusa-sol', 'blusa-duna'],
+};
+
 export const WHATSAPP = {
   // Código de país del negocio. Venezuela: 58.
   codigoPais: '58',

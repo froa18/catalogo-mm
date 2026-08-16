@@ -1,0 +1,185 @@
+---
+/**
+ * Barra de navegación fija: enlace al catálogo, logotipo al centro y la bolsa
+ * con el conteo de piezas.
+ *
+ * En la portada el logotipo ya aparece grande en la cabecera, así que el de la
+ * barra arranca oculto y se revela al perder de vista esa cabecera — el mismo
+ * gesto que usan las tiendas grandes para no repetir la marca dos veces en
+ * pantalla. Se activa pasando `revelarConScroll`.
+ */
+import Marca from './Marca.astro';
+import { ANUNCIO } from '../config.js';
+
+interface Props {
+  revelarConScroll?: boolean;
+}
+
+const { revelarConScroll = false } = Astro.props;
+---
+
+{ANUNCIO.activo && <p class="anuncio">{ANUNCIO.texto}</p>}
+
+<header class="navbar">
+  <div class="envoltura fila">
+    <a class="catalogo" href="/#catalogo">Catálogo</a>
+
+    <span
+      class:list={['marca-barra', { velada: revelarConScroll }]}
+      data-marca-barra
+    >
+      <Marca compacta enlace />
+    </span>
+
+    <button type="button" class="bolsa" data-carrito-abrir aria-label="Ver mi pedido">
+      <svg
+        width="21"
+        height="21"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <path d="M3 6h18"></path>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="conteo" data-carrito-conteo hidden>0</span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .anuncio {
+    margin: 0;
+    padding: var(--e2) var(--e4);
+    background: var(--acento-hondo);
+    color: var(--hueso);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: color-mix(in srgb, var(--hueso) 90%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hueso-borde);
+  }
+
+  .fila {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: var(--alto-navbar);
+  }
+
+  .catalogo {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--tinta-media);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .catalogo:hover {
+    color: var(--acento-hondo);
+  }
+
+  /* --- Logotipo que se revela ---------------------------------- */
+
+  .marca-barra {
+    justify-self: center;
+    transition:
+      opacity var(--transicion),
+      transform var(--transicion);
+  }
+
+  .marca-barra.velada {
+    opacity: 0;
+    transform: translateY(4px);
+    /* Oculto también para el teclado mientras no se ve */
+    visibility: hidden;
+  }
+
+  .marca-barra.revelada {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+  }
+
+  /* --- Bolsa ---------------------------------------------------- */
+
+  .bolsa {
+    position: relative;
+    justify-self: end;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: var(--tinta);
+  }
+
+  .bolsa:hover {
+    background: var(--hueso-hondo);
+  }
+
+  .conteo {
+    position: absolute;
+    top: 1px;
+    right: 0;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background: var(--acento-hondo);
+    border-radius: 100px;
+    color: var(--hueso);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .conteo[hidden] {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marca-barra {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // El logotipo de la barra aparece cuando la cabecera de la portada se va.
+  const marca = document.querySelector<HTMLElement>('[data-marca-barra]');
+  const cabecera = document.querySelector<HTMLElement>('[data-cabecera]');
+
+  if (marca?.classList.contains('velada') && cabecera) {
+    const alto =
+      document.querySelector<HTMLElement>('header.navbar')?.offsetHeight ?? 56;
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => marca.classList.toggle('revelada', !entrada.isIntersecting),
+      { rootMargin: `-${alto}px 0px 0px 0px` }
+    );
+    observador.observe(cabecera);
+  } else {
+    // Sin cabecera que observar, el logotipo se queda visible.
+    marca?.classList.remove('velada');
+  }
+</script>

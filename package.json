@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "capturas": "node scripts/capturas.mjs"
   },
   "dependencies": {
     "astro": "^7.2.2"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
   }
 }

@@ -2,9 +2,9 @@
 /**
  * Panel lateral con el pedido en curso.
  *
- * Contiene además la lógica compartida del carrito: mantiene sincronizado el
- * contador del botón flotante y responde a cualquier elemento con
- * `data-carrito-abrir`.
+ * Contiene además la lógica compartida del carrito: mantiene sincronizados
+ * todos los contadores `data-carrito-conteo` y responde a cualquier elemento
+ * con `data-carrito-abrir`.
  */
 ---
 
@@ -39,6 +39,14 @@
 </dialog>
 
 <style>
+  /* Solo se muestra abierto: `display: flex` a secas pisaría la regla del
+     navegador que esconde los diálogos cerrados, y el panel quedaría
+     dibujado al pie de todas las páginas. */
+  .panel[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
   .panel {
     width: min(420px, 100%);
     max-width: 100%;
@@ -49,8 +57,6 @@
     background: var(--hueso);
     border: none;
     color: var(--tinta);
-    display: flex;
-    flex-direction: column;
   }
 
   .panel::backdrop {
@@ -151,8 +157,8 @@
   }
 
   .cuerpo :global(.cantidad button) {
-    width: 30px;
-    height: 30px;
+    width: 44px;
+    height: 44px;
     background: transparent;
     border: none;
     border-radius: 50%;
@@ -174,11 +180,14 @@
   }
 
   .cuerpo :global(.quitar) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--e2);
     background: none;
     border: none;
-    padding: 0;
     color: var(--tinta-suave);
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -243,18 +252,19 @@
   const cuerpo = document.querySelector<HTMLElement>('[data-carrito-cuerpo]');
   const pie = document.querySelector<HTMLElement>('[data-carrito-pie]');
   const totalEl = document.querySelector<HTMLElement>('[data-carrito-total]');
-  const boton = document.querySelector<HTMLElement>('[data-carrito-abrir]');
-  const conteoEl = document.querySelector<HTMLElement>('[data-carrito-conteo]');
+  const botones = document.querySelectorAll<HTMLElement>('[data-carrito-abrir]');
+  const conteos = document.querySelectorAll<HTMLElement>('[data-carrito-conteo]');
 
   function pintar() {
     const lineas = leer();
     const piezas = contarPiezas(lineas);
 
-    // Contador del botón flotante
-    if (boton && conteoEl) {
-      conteoEl.textContent = String(piezas);
-      boton.hidden = piezas === 0;
-    }
+    // La bolsa de la barra queda siempre a la vista; el número aparece
+    // solo cuando hay algo que contar.
+    conteos.forEach((elemento) => {
+      elemento.textContent = String(piezas);
+      elemento.hidden = piezas === 0;
+    });
 
     if (!cuerpo || !pie || !totalEl) return;
 
@@ -304,7 +314,9 @@
     }
   });
 
-  boton?.addEventListener('click', () => panel?.showModal());
+  botones.forEach((boton) =>
+    boton.addEventListener('click', () => panel?.showModal())
+  );
   document
     .querySelector('[data-carrito-cerrar]')
     ?.addEventListener('click', () => panel?.close());

@@ -1,0 +1,237 @@
+---
+/**
+ * Carrusel de piezas destacadas: se desliza con el dedo y marca la posición
+ * con puntos, y debajo lleva el título y la explicación de la selección.
+ *
+ * El desplazamiento es scroll nativo con anclaje (`scroll-snap`), no una
+ * biblioteca: funciona sin JavaScript, y el JavaScript solo sincroniza los
+ * puntos.
+ */
+import ProductoCard from './ProductoCard.astro';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  productos: any[];
+}
+
+const { titulo, descripcion, productos } = Astro.props;
+---
+
+<section class="destacados" aria-labelledby="titulo-destacados">
+  <div class="pista" data-pista tabindex="0" role="group" aria-label={titulo}>
+    {
+      productos.map((producto) => (
+        <div class="diapositiva" data-diapositiva>
+          <ProductoCard producto={producto} />
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="puntos" data-puntos>
+    {
+      productos.map((producto, i) => (
+        <button
+          type="button"
+          class="punto"
+          data-ir={i}
+          aria-label={`Ver ${producto.nombre}`}
+          aria-current={i === 0 ? 'true' : 'false'}
+        />
+      ))
+    }
+  </div>
+
+  <div class="envoltura texto">
+    <h2 class="titulo" id="titulo-destacados">{titulo}</h2>
+    <p class="descripcion">{descripcion}</p>
+    <a class="ver-todo" href="#catalogo"><span>Ver todo el catálogo</span></a>
+  </div>
+</section>
+
+<style>
+  .destacados {
+    padding: var(--e6) 0 var(--e7);
+  }
+
+  /* --- Pista deslizable ---------------------------------------- */
+
+  .pista {
+    /* La orilla alinea el carrusel con el resto de la página. Va también en
+       `scroll-padding` porque, si no, el anclaje la ignora y arranca comida. */
+    --orilla: max(var(--e5), calc((100% - 80vw) / 2));
+
+    display: flex;
+    gap: var(--e4);
+    /* Sin esto, el ancho del carrusel se suma al del documento y el teléfono
+       encoge la página entera para que quepa: el catálogo aparecía a 1000px
+       de ancho en una pantalla de 390. Ni `overflow: hidden` ni `clip` lo
+       evitan; hace falta contener también la pintura. */
+    contain: paint;
+    padding-inline: var(--orilla);
+    scroll-padding-inline: var(--orilla);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .pista::-webkit-scrollbar {
+    display: none;
+  }
+
+  .diapositiva {
+    flex: 0 0 80vw;
+    scroll-snap-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .pista {
+      --orilla: max(var(--e6), calc((100% - 1180px) / 2));
+    }
+
+    .diapositiva {
+      flex-basis: 300px;
+      scroll-snap-align: start;
+    }
+  }
+
+  /* --- Puntos --------------------------------------------------- */
+
+  .puntos {
+    display: flex;
+    justify-content: center;
+    /* El área táctil de cada punto ya trae aire propio */
+    gap: 0;
+    margin-top: var(--e3);
+  }
+
+  /* La marca visible es una rayita, pero se toca un cuadro de 44px */
+  .punto {
+    display: grid;
+    align-items: center;
+    width: 32px;
+    height: 44px;
+    padding: 0 5px;
+    background: transparent;
+    border: none;
+  }
+
+  .punto::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--hueso-borde);
+    transition: background var(--transicion);
+  }
+
+  .punto[aria-current='true']::before {
+    height: 2px;
+    background: var(--acento-hondo);
+  }
+
+  /* --- Texto de la selección ------------------------------------ */
+
+  .texto {
+    margin-top: var(--e6);
+    text-align: center;
+  }
+
+  .titulo {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 5.5vw, 2rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .descripcion {
+    max-width: 46ch;
+    margin: var(--e3) auto 0;
+    color: var(--tinta-media);
+    font-size: 0.9375rem;
+  }
+
+  .ver-todo {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: var(--e2);
+    color: var(--tinta);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  /* El subrayado va en el texto; el alto de dedo, en el enlace */
+  .ver-todo span {
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--acento);
+  }
+
+  .ver-todo:hover {
+    color: var(--acento-hondo);
+  }
+
+  .ver-todo:hover span {
+    border-color: var(--acento-hondo);
+  }
+</style>
+
+<script>
+  const pista = document.querySelector<HTMLElement>('[data-pista]');
+  const puntos = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[data-puntos] .punto')
+  );
+  const diapositivas = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-diapositiva]')
+  );
+
+  if (pista && puntos.length && diapositivas.length) {
+    // Marca la pieza cuyo inicio está más cerca del borde del carrusel. Con
+    // "la más visible" fallaba en pantallas anchas, donde se ven todas a la
+    // vez y ganaba siempre la última.
+    let pendiente = false;
+
+    const marcar = () => {
+      pendiente = false;
+      const orilla = pista.getBoundingClientRect().left;
+      let cercana = 0;
+      let minima = Infinity;
+
+      diapositivas.forEach((diapositiva, i) => {
+        const distancia = Math.abs(
+          diapositiva.getBoundingClientRect().left - orilla
+        );
+        if (distancia < minima) {
+          minima = distancia;
+          cercana = i;
+        }
+      });
+
+      puntos.forEach((punto, i) =>
+        punto.setAttribute('aria-current', String(i === cercana))
+      );
+    };
+
+    pista.addEventListener('scroll', () => {
+      if (pendiente) return;
+      pendiente = true;
+      requestAnimationFrame(marcar);
+    });
+
+    marcar();
+
+    puntos.forEach((punto, i) => {
+      punto.addEventListener('click', () => {
+        diapositivas[i].scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center',
+        });
+      });
+    });
+  }
+</script>

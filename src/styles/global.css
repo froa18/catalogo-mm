@@ -37,6 +37,7 @@
   --e8: 4rem;
 
   /* Otros */
+  --alto-navbar: 56px;
   --radio: 2px;
   --transicion: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }

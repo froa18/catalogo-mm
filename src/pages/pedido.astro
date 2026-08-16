@@ -1,18 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import Marca from '../components/Marca.astro';
 import { MARCA, WHATSAPP, FORMAS_PAGO, FORMAS_ENTREGA } from '../config.js';
 
 const faltaNumero = !WHATSAPP.numero;
 ---
 
 <Base titulo={`Tu pedido — ${MARCA.nombre}`}>
-  <header class="barra">
-    <div class="envoltura">
-      <Marca compacta enlace />
-    </div>
-  </header>
-
   <div class="envoltura estrecha">
     <nav class="migas">
       <a href="/">← Seguir viendo el catálogo</a>
@@ -90,23 +83,21 @@ const faltaNumero = !WHATSAPP.numero;
 </Base>
 
 <style>
-  .barra {
-    padding: var(--e4) 0;
-    border-bottom: 1px solid var(--hueso-borde);
-    text-align: center;
-  }
-
   .estrecha {
     max-width: 640px;
   }
 
   .migas {
-    padding: var(--e5) 0 var(--e4);
+    padding: var(--e2) 0;
   }
 
+  /* Alto de dedo, no de cursor */
   .migas a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: var(--tinta-media);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     text-decoration: none;
   }
 
@@ -157,6 +148,9 @@ const faltaNumero = !WHATSAPP.numero;
   }
 
   .lineas :global(.vacio a) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: var(--tinta);
   }
 
@@ -203,8 +197,8 @@ const faltaNumero = !WHATSAPP.numero;
   }
 
   .lineas :global(.cantidad button) {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     background: transparent;
     border: none;
     border-radius: 50%;
@@ -224,11 +218,14 @@ const faltaNumero = !WHATSAPP.numero;
   }
 
   .lineas :global(.quitar) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--e2);
     background: none;
     border: none;
-    padding: 0;
     color: var(--tinta-suave);
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -303,7 +300,10 @@ const faltaNumero = !WHATSAPP.numero;
     border-radius: var(--radio);
     color: var(--tinta);
     font: inherit;
-    font-size: 0.9375rem;
+    /* 16px exactos: por debajo de eso iOS hace zoom solo al tocar el campo y
+       la clienta queda perdida en medio del formulario. */
+    font-size: 1rem;
+    min-height: 44px;
   }
 
   .campo textarea {

@@ -6,6 +6,9 @@ node_modules/
 .env.*
 !.env.example
 
+# Capturas de revisión — se regeneran con `npm run capturas`
+capturas/
+
 # Builds y cachés
 dist/
 build/

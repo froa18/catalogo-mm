@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Marca from '../../components/Marca.astro';
 import Flat from '../../components/Flat.astro';
 import productos from '../../data/productos.json';
 import { MARCA } from '../../config.js';
@@ -25,12 +24,6 @@ const precio = formatearPrecio(producto.precioUSD);
   descripcion={`${producto.descripcion} ${precio}`}
   imagen={producto.imagen}
 >
-  <header class="barra">
-    <div class="envoltura">
-      <Marca compacta enlace />
-    </div>
-  </header>
-
   <div class="envoltura">
     <nav class="migas">
       <a href="/">← Volver al catálogo</a>
@@ -121,19 +114,17 @@ const precio = formatearPrecio(producto.precioUSD);
 </Base>
 
 <style>
-  .barra {
-    padding: var(--e4) 0;
-    border-bottom: 1px solid var(--hueso-borde);
-    text-align: center;
-  }
-
   .migas {
-    padding: var(--e5) 0 var(--e4);
+    padding: var(--e2) 0;
   }
 
+  /* Alto de dedo, no de cursor */
   .migas a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: var(--tinta-media);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     text-decoration: none;
   }
 
@@ -183,7 +174,7 @@ const precio = formatearPrecio(producto.precioUSD);
 
   .distintivo {
     position: absolute;
-    top: var(--e4);
+    bottom: var(--e4);
     left: var(--e4);
     padding: 3px var(--e2);
     background: var(--acento-hondo);
@@ -245,7 +236,7 @@ const precio = formatearPrecio(producto.precioUSD);
   .codigo-etiqueta {
     margin-top: 2px;
     color: var(--tinta-suave);
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     font-weight: 500;
     letter-spacing: 0.05em;
   }
@@ -324,11 +315,14 @@ const precio = formatearPrecio(producto.precioUSD);
     pointer-events: none;
   }
 
-  .chip span {
+  /* Hijo directo: si no, la regla alcanza también a la muestra de color de
+     adentro y la convierte en otra píldora. */
+  .chip > span {
     display: flex;
     align-items: center;
     gap: var(--e2);
     min-width: 44px;
+    min-height: 44px;
     padding: var(--e2) var(--e4);
     background: transparent;
     border: 1px solid var(--hueso-borde);
@@ -343,7 +337,7 @@ const precio = formatearPrecio(producto.precioUSD);
       color var(--transicion);
   }
 
-  .chip:hover span {
+  .chip:hover > span {
     border-color: var(--acento);
     color: var(--tinta);
   }
@@ -360,6 +354,7 @@ const precio = formatearPrecio(producto.precioUSD);
   }
 
   .muestra {
+    flex: none;
     width: 13px;
     height: 13px;
     border-radius: 50%;
@@ -375,8 +370,8 @@ const precio = formatearPrecio(producto.precioUSD);
   }
 
   .cantidad button {
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
     background: transparent;
     border: none;
     border-radius: 50%;

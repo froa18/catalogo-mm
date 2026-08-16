@@ -1,13 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
 import Marca from '../components/Marca.astro';
+import Carrusel from '../components/Carrusel.astro';
 import ProductoCard from '../components/ProductoCard.astro';
 import productos from '../data/productos.json';
-import { MARCA, CATEGORIAS } from '../config.js';
+import { MARCA, CATEGORIAS, DESTACADOS } from '../config.js';
 
 const visibles = productos
   .filter((p) => p.disponible)
   .sort((a, b) => a.orden - b.orden);
+
+// La selección respeta el orden de config.js y descarta lo que ya no exista.
+const destacados = DESTACADOS.ids
+  .map((id) => visibles.find((p) => p.id === id))
+  .filter(Boolean);
 
 // Solo se muestran los filtros que tienen piezas detrás.
 const categoriasConPiezas = CATEGORIAS.filter(
@@ -15,15 +21,25 @@ const categoriasConPiezas = CATEGORIAS.filter(
 );
 ---
 
-<Base>
-  <header class="cabecera">
+<Base marcaConScroll>
+  <header class="cabecera" data-cabecera>
     <div class="envoltura">
       <h1 class="titulo-marca"><Marca /></h1>
       <p class="lema">{MARCA.descripcion}</p>
     </div>
   </header>
 
-  <nav class="filtros" aria-label="Filtrar por categoría">
+  {
+    destacados.length > 1 && (
+      <Carrusel
+        titulo={DESTACADOS.titulo}
+        descripcion={DESTACADOS.descripcion}
+        productos={destacados}
+      />
+    )
+  }
+
+  <nav class="filtros" id="catalogo" aria-label="Filtrar por categoría">
     <div class="envoltura">
       <ul class="chips">
         {
@@ -87,8 +103,11 @@ const categoriasConPiezas = CATEGORIAS.filter(
 
   .filtros {
     position: sticky;
-    top: 0;
+    /* Se detiene justo debajo de la barra de navegación */
+    top: var(--alto-navbar);
     z-index: 10;
+    /* Deja aire cuando se llega por el enlace "Ver todo el catálogo" */
+    scroll-margin-top: var(--alto-navbar);
     background: color-mix(in srgb, var(--hueso) 88%, transparent);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--hueso-borde);
@@ -109,6 +128,9 @@ const categoriasConPiezas = CATEGORIAS.filter(
   }
 
   .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     padding: var(--e2) var(--e4);
     background: transparent;
     border: 1px solid var(--hueso-borde);

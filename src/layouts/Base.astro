@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { MARCA } from '../config.js';
-import CarritoBoton from '../components/CarritoBoton.astro';
+import Navbar from '../components/Navbar.astro';
 import CarritoPanel from '../components/CarritoPanel.astro';
 
 interface Props {
@@ -9,12 +9,18 @@ interface Props {
   descripcion?: string;
   /** Ruta de imagen para la previsualización al compartir el enlace. */
   imagen?: string | null;
+  /**
+   * En la portada el logotipo de la barra espera a que la cabecera salga de
+   * pantalla; en el resto de las páginas está desde el principio.
+   */
+  marcaConScroll?: boolean;
 }
 
 const {
   titulo = `${MARCA.nombre} — ${MARCA.descripcion}`,
   descripcion = 'Catálogo de blusas. Elegí tu talla y color, armá tu pedido y envialo por WhatsApp.',
   imagen = null,
+  marcaConScroll = false,
 } = Astro.props;
 
 const urlCanonica = new URL(Astro.url.pathname, Astro.site);
@@ -49,8 +55,8 @@ const urlImagen = imagen ? new URL(imagen, Astro.site) : null;
     />
   </head>
   <body>
+    <Navbar revelarConScroll={marcaConScroll} />
     <slot />
-    <CarritoBoton />
     <CarritoPanel />
   </body>
 </html>

@@ -76,21 +76,34 @@ const agotado = producto.tallas.length === 0;
 </a>
 
 <style>
+  /* La pieza va sobre una tarjeta blanca que flota apenas sobre el fondo:
+     la sombra separa sin necesidad de bordes ni botones dentro de la
+     tarjeta — al tocarla se entra a la ficha, que es donde se elige. */
   .tarjeta {
     display: flex;
     flex-direction: column;
+    padding: var(--e2) var(--e2) var(--e4);
+    background: #fff;
+    border-radius: 14px;
+    box-shadow:
+      0 1px 2px rgb(74 32 40 / 0.05),
+      0 6px 16px rgb(74 32 40 / 0.06);
     color: inherit;
     text-decoration: none;
+    transition:
+      transform var(--transicion),
+      box-shadow var(--transicion);
   }
 
-  .tarjeta:hover .lienzo {
-    border-color: var(--acento);
+  .tarjeta:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 2px 4px rgb(74 32 40 / 0.06),
+      0 14px 28px rgb(74 32 40 / 0.1);
   }
 
   .tarjeta:hover .nombre {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-color: var(--acento);
+    color: var(--acento-hondo);
   }
 
   /* --- Zona de imagen ------------------------------------------ */
@@ -99,8 +112,8 @@ const agotado = producto.tallas.length === 0;
     position: relative;
     aspect-ratio: 4 / 5;
     background: var(--hueso-hondo);
-    border: 1px solid var(--hueso-borde);
-    border-radius: var(--radio);
+    /* Radio interior menor que el de la tarjeta, como en las piezas reales */
+    border-radius: 9px;
     overflow: hidden;
     display: grid;
     place-items: center;
@@ -120,9 +133,11 @@ const agotado = producto.tallas.length === 0;
 
   /* --- Distintivo ("Nuevo", "Últimas piezas") ------------------- */
 
+  /* Abajo a la izquierda: arriba chocaba con la etiqueta colgante en cuanto
+     el texto pasaba de una palabra. */
   .distintivo {
     position: absolute;
-    top: var(--e3);
+    bottom: var(--e3);
     left: var(--e3);
     padding: 3px var(--e2);
     background: var(--acento-hondo);
@@ -161,8 +176,9 @@ const agotado = producto.tallas.length === 0;
     place-items: center;
     min-width: 62px;
     padding: 16px var(--e3) var(--e2);
-    background: var(--hueso);
+    background: #fff;
     border: 1px solid var(--hueso-borde);
+    box-shadow: 0 2px 6px rgb(74 32 40 / 0.08);
     /* Esquinas superiores biseladas, como una etiqueta real */
     clip-path: polygon(0 14%, 50% 0, 100% 14%, 100% 100%, 0 100%);
   }
@@ -190,7 +206,7 @@ const agotado = producto.tallas.length === 0;
   .codigo {
     margin-top: 2px;
     color: var(--tinta-suave);
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     font-weight: 500;
     letter-spacing: 0.05em;
   }
@@ -202,7 +218,7 @@ const agotado = producto.tallas.length === 0;
   /* --- Información --------------------------------------------- */
 
   .info {
-    padding-top: var(--e3);
+    padding: var(--e3) var(--e2) 0;
   }
 
   .nombre {
