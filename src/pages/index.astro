@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import Marca from '../components/Marca.astro';
 import Carrusel from '../components/Carrusel.astro';
 import ProductoCard from '../components/ProductoCard.astro';
 import productos from '../data/productos.json';
@@ -21,13 +20,9 @@ const categoriasConPiezas = CATEGORIAS.filter(
 );
 ---
 
-<Base marcaConScroll>
-  <header class="cabecera" data-cabecera>
-    <div class="envoltura">
-      <h1 class="titulo-marca"><Marca /></h1>
-      <p class="lema">{MARCA.descripcion}</p>
-    </div>
-  </header>
+<Base>
+  {/* El nombre de la marca vive en la barra fija, no repetido acá arriba */}
+  <h1 class="oculto-visual">{MARCA.nombre} — {MARCA.descripcion}</h1>
 
   {
     destacados.length > 1 && (
@@ -78,27 +73,6 @@ const categoriasConPiezas = CATEGORIAS.filter(
 </Base>
 
 <style>
-  /* --- Cabecera ------------------------------------------------ */
-
-  .cabecera {
-    padding-top: var(--e7);
-    padding-bottom: var(--e5);
-    text-align: center;
-  }
-
-  .titulo-marca {
-    margin: 0;
-    font-weight: 400;
-  }
-
-  .lema {
-    margin: var(--e4) 0 0;
-    color: var(--tinta-suave);
-    font-size: 0.8125rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
   /* --- Filtros ------------------------------------------------- */
 
   .filtros {
@@ -210,24 +184,30 @@ const categoriasConPiezas = CATEGORIAS.filter(
       grilla.querySelectorAll<HTMLElement>('[data-categoria]')
     );
 
-    chips.forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const filtro = chip.dataset.filtro;
+    function filtrar(categoria: string) {
+      chips.forEach((chip) =>
+        chip.setAttribute('aria-pressed', String(chip.dataset.filtro === categoria))
+      );
 
-        chips.forEach((otro) =>
-          otro.setAttribute('aria-pressed', String(otro === chip))
-        );
-
-        let visibles = 0;
-        tarjetas.forEach((tarjeta) => {
-          const coincide =
-            filtro === 'todas' || tarjeta.dataset.categoria === filtro;
-          tarjeta.hidden = !coincide;
-          if (coincide) visibles++;
-        });
-
-        conteo.textContent = `${visibles} ${visibles === 1 ? 'pieza' : 'piezas'}`;
+      let visibles = 0;
+      tarjetas.forEach((tarjeta) => {
+        const coincide =
+          categoria === 'todas' || tarjeta.dataset.categoria === categoria;
+        tarjeta.hidden = !coincide;
+        if (coincide) visibles++;
       });
+
+      conteo!.textContent = `${visibles} ${visibles === 1 ? 'pieza' : 'piezas'}`;
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => filtrar(chip.dataset.filtro ?? 'todas'));
     });
+
+    // El menú lateral llega con la categoría en la dirección: /?categoria=…
+    const pedida = new URLSearchParams(location.search).get('categoria');
+    if (pedida && [...chips].some((chip) => chip.dataset.filtro === pedida)) {
+      filtrar(pedida);
+    }
   }
 </script>

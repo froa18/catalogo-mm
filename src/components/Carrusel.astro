@@ -8,14 +8,16 @@
  * puntos.
  */
 import ProductoCard from './ProductoCard.astro';
+import Marca from './Marca.astro';
 
 interface Props {
   titulo: string;
-  descripcion: string;
+  /** Opcional: si viene vacía, la sección se queda solo con el título. */
+  descripcion?: string;
   productos: any[];
 }
 
-const { titulo, descripcion, productos } = Astro.props;
+const { titulo, descripcion = '', productos } = Astro.props;
 ---
 
 <section class="destacados" aria-labelledby="titulo-destacados">
@@ -23,7 +25,7 @@ const { titulo, descripcion, productos } = Astro.props;
     {
       productos.map((producto) => (
         <div class="diapositiva" data-diapositiva>
-          <ProductoCard producto={producto} />
+          <ProductoCard producto={producto} soloImagen />
         </div>
       ))
     }
@@ -45,7 +47,13 @@ const { titulo, descripcion, productos } = Astro.props;
 
   <div class="envoltura texto">
     <h2 class="titulo" id="titulo-destacados">{titulo}</h2>
-    <p class="descripcion">{descripcion}</p>
+    {descripcion && <p class="descripcion">{descripcion}</p>}
+
+    {/* El monograma remata la sección y separa el título del enlace */}
+    <span class="remate" aria-hidden="true">
+      <Marca soloMonograma />
+    </span>
+
     <a class="ver-todo" href="#catalogo"><span>Ver todo el catálogo</span></a>
   </div>
 </section>
@@ -60,7 +68,7 @@ const { titulo, descripcion, productos } = Astro.props;
   .pista {
     /* La orilla alinea el carrusel con el resto de la página. Va también en
        `scroll-padding` porque, si no, el anclaje la ignora y arranca comida. */
-    --orilla: max(var(--e5), calc((100% - 80vw) / 2));
+    --orilla: var(--e5);
 
     display: flex;
     gap: var(--e4);
@@ -80,9 +88,11 @@ const { titulo, descripcion, productos } = Astro.props;
     display: none;
   }
 
+  /* Dos piezas y media a la vista: se aprecian las blusas y se entiende de
+     un vistazo que la tira sigue. */
   .diapositiva {
-    flex: 0 0 80vw;
-    scroll-snap-align: center;
+    flex: 0 0 44vw;
+    scroll-snap-align: start;
   }
 
   @media (min-width: 640px) {
@@ -153,11 +163,16 @@ const { titulo, descripcion, productos } = Astro.props;
     font-size: 0.9375rem;
   }
 
+  .remate {
+    display: block;
+    margin-top: var(--e4);
+  }
+
   .ver-todo {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    margin-top: var(--e2);
+    margin-top: var(--e3);
     color: var(--tinta);
     font-size: 0.8125rem;
     letter-spacing: 0.06em;

@@ -1,0 +1,156 @@
+---
+/**
+ * Menú lateral que abre el icono de la barra.
+ *
+ * Lleva a la portada con la categoría ya elegida (`?categoria=…`), así que
+ * funciona igual desde la ficha de una pieza o desde el pedido, sin depender
+ * de en qué página esté abierto.
+ */
+import { CATEGORIAS } from '../config.js';
+---
+
+<dialog class="menu" data-menu aria-label="Menú">
+  <div class="cabecera">
+    <span class="rotulo">Catálogo</span>
+    <button type="button" class="cerrar" data-menu-cerrar aria-label="Cerrar menú">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav class="lista" aria-label="Categorías">
+    {
+      CATEGORIAS.map((categoria) => (
+        <a href={`/?categoria=${categoria.id}#catalogo`}>{categoria.nombre}</a>
+      ))
+    }
+  </nav>
+
+  <div class="pie">
+    <a href="/pedido/">Mi pedido</a>
+  </div>
+</dialog>
+
+<style>
+  .menu[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .menu {
+    width: min(320px, 84%);
+    height: 100dvh;
+    max-height: 100dvh;
+    /* Entra por la izquierda, del lado del icono que lo abre */
+    margin: 0 auto 0 0;
+    padding: 0;
+    background: var(--hueso);
+    border: none;
+    color: var(--tinta);
+  }
+
+  .menu::backdrop {
+    background: rgb(36 28 29 / 0.4);
+  }
+
+  .cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--e3) var(--e4) var(--e3) var(--e5);
+    border-bottom: 1px solid var(--hueso-borde);
+  }
+
+  .rotulo {
+    color: var(--tinta-suave);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .cerrar {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: var(--tinta-media);
+  }
+
+  .cerrar:hover {
+    background: var(--hueso-hondo);
+    color: var(--tinta);
+  }
+
+  .lista {
+    display: flex;
+    flex-direction: column;
+    padding: var(--e4) 0;
+  }
+
+  .lista a {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 var(--e5);
+    color: var(--tinta);
+    font-family: var(--serif);
+    font-size: 1.125rem;
+    text-decoration: none;
+  }
+
+  .lista a:hover {
+    background: var(--acento-humo);
+    color: var(--acento-hondo);
+  }
+
+  .pie {
+    margin-top: auto;
+    padding: var(--e4) var(--e5) var(--e6);
+    border-top: 1px solid var(--hueso-borde);
+  }
+
+  .pie a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--tinta-media);
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .pie a:hover {
+    color: var(--acento-hondo);
+  }
+</style>
+
+<script>
+  const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
+
+  document
+    .querySelectorAll('[data-menu-abrir]')
+    .forEach((boton) => boton.addEventListener('click', () => menu?.showModal()));
+
+  document
+    .querySelector('[data-menu-cerrar]')
+    ?.addEventListener('click', () => menu?.close());
+
+  // Tocar fuera del panel también cierra
+  menu?.addEventListener('click', (evento) => {
+    if (evento.target === menu) menu.close();
+  });
+</script>

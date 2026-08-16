@@ -3,6 +3,8 @@ import Flat from './Flat.astro';
 import { formatearPrecio } from '../utils/formato.js';
 
 interface Props {
+  /** Solo la foto y su etiqueta de precio, sin la ficha de texto debajo. */
+  soloImagen?: boolean;
   producto: {
     id: string;
     codigo: string;
@@ -17,12 +19,12 @@ interface Props {
   };
 }
 
-const { producto } = Astro.props;
+const { producto, soloImagen = false } = Astro.props;
 const agotado = producto.tallas.length === 0;
 ---
 
 <a
-  class="tarjeta"
+  class:list={['tarjeta', { 'solo-imagen': soloImagen }]}
   href={`/producto/${producto.id}/`}
   data-categoria={producto.categoria}
   data-id={producto.id}
@@ -47,6 +49,15 @@ const agotado = producto.tallas.length === 0;
       </span>
     </div>
   </div>
+
+  {
+    /* Sin ficha visible, el enlace necesita igual un nombre que dictar */
+    soloImagen && (
+      <span class="oculto-visual">
+        {producto.nombre} — {formatearPrecio(producto.precioUSD)}
+      </span>
+    )
+  }
 
   <div class="info">
     <h3 class="nombre">{producto.nombre}</h3>
@@ -219,6 +230,36 @@ const agotado = producto.tallas.length === 0;
 
   .info {
     padding: var(--e3) var(--e2) 0;
+  }
+
+  /* En el carrusel la tarjeta es solo la pieza: sin texto y sin el aire que
+     lo acompañaba. */
+  .solo-imagen {
+    padding: var(--e2);
+  }
+
+  .solo-imagen .info {
+    display: none;
+  }
+
+  /* Tarjeta chica: la etiqueta se achica y suelta el código, para no taparle
+     la prenda a la clienta. */
+  .solo-imagen .etiqueta {
+    min-width: 48px;
+    padding: 13px var(--e2) 6px;
+  }
+
+  .solo-imagen .precio {
+    font-size: 0.8125rem;
+  }
+
+  .solo-imagen .codigo {
+    display: none;
+  }
+
+  .solo-imagen .distintivo {
+    padding: 2px 6px;
+    font-size: 0.625rem;
   }
 
   .nombre {

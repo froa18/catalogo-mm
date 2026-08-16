@@ -29,8 +29,9 @@ export const ANUNCIO = {
  */
 export const DESTACADOS = {
   titulo: 'Básicos para todos los días',
-  descripcion:
-    'Las piezas que se repiten en el armario: cortes simples, telas livianas y colores que combinan con lo que ya tenés.',
+  // Vacía: la sección se queda solo con el título. Al escribir algo acá,
+  // aparece el párrafo debajo.
+  descripcion: '',
   ids: ['blusa-aurora', 'blusa-mar', 'blusa-sol', 'blusa-duna'],
 };
 

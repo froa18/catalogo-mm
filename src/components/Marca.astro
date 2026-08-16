@@ -17,17 +17,23 @@ import { MARCA } from '../config.js';
 
 interface Props {
   compacta?: boolean;
+  /** Solo el monograma, sin el nombre: sirve de remate entre secciones. */
+  soloMonograma?: boolean;
   /** Envuelve el logotipo en un enlace a la portada. */
   enlace?: boolean;
 }
 
-const { compacta = false, enlace = false } = Astro.props;
+const {
+  compacta = false,
+  soloMonograma = false,
+  enlace = false,
+} = Astro.props;
 const Etiqueta = enlace ? 'a' : 'div';
 const [primera, segunda] = MARCA.nombre.split(' ');
 ---
 
 <Etiqueta
-  class:list={['marca', { compacta }]}
+  class:list={['marca', { compacta, 'solo-monograma': soloMonograma }]}
   href={enlace ? '/' : undefined}
   aria-label={enlace ? `${MARCA.nombre} — ir al catálogo` : undefined}
 >
@@ -42,10 +48,14 @@ const [primera, segunda] = MARCA.nombre.split(' ');
 
   {/* El nombre se parte en dos para el diseño; se dicta entero por lectores
       de pantalla, sin el interletrado que lo deletrearía. */}
-  <span class="nombre" aria-hidden="true">
-    <span class="palabra">{primera}</span>
-    <span class="palabra">{segunda}</span>
-  </span>
+  {
+    !soloMonograma && (
+      <span class="nombre" aria-hidden="true">
+        <span class="palabra">{primera}</span>
+        <span class="palabra">{segunda}</span>
+      </span>
+    )
+  }
   <span class="oculto-visual">{MARCA.nombre}</span>
 </Etiqueta>
 
@@ -103,6 +113,12 @@ const [primera, segunda] = MARCA.nombre.split(' ');
      bloque quede ópticamente centrado. */
   .palabra {
     text-indent: 0.42em;
+  }
+
+  /* --- Solo monograma ------------------------------------------- */
+
+  .solo-monograma .monograma {
+    font-size: clamp(2.25rem, 9vw, 3rem);
   }
 
   /* --- Forma compacta ------------------------------------------- */
