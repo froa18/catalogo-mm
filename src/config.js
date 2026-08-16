@@ -7,8 +7,9 @@
  */
 
 export const MARCA = {
-  // Pendiente: nombre y logotipo definitivos.
-  nombre: 'MM',
+  nombre: 'Modas Marfreidy',
+  // Monograma del logotipo: las dos emes superpuestas.
+  iniciales: 'MM',
   descripcion: 'Blusas',
 };
 

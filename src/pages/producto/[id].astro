@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Marca from '../../components/Marca.astro';
 import Flat from '../../components/Flat.astro';
 import productos from '../../data/productos.json';
 import { MARCA } from '../../config.js';
@@ -24,6 +25,12 @@ const precio = formatearPrecio(producto.precioUSD);
   descripcion={`${producto.descripcion} ${precio}`}
   imagen={producto.imagen}
 >
+  <header class="barra">
+    <div class="envoltura">
+      <Marca compacta enlace />
+    </div>
+  </header>
+
   <div class="envoltura">
     <nav class="migas">
       <a href="/">← Volver al catálogo</a>
@@ -114,6 +121,12 @@ const precio = formatearPrecio(producto.precioUSD);
 </Base>
 
 <style>
+  .barra {
+    padding: var(--e4) 0;
+    border-bottom: 1px solid var(--hueso-borde);
+    text-align: center;
+  }
+
   .migas {
     padding: var(--e5) 0 var(--e4);
   }
@@ -173,7 +186,7 @@ const precio = formatearPrecio(producto.precioUSD);
     top: var(--e4);
     left: var(--e4);
     padding: 3px var(--e2);
-    background: var(--sage);
+    background: var(--acento-hondo);
     color: #fff;
     font-size: 0.6875rem;
     font-weight: 500;
@@ -331,7 +344,7 @@ const precio = formatearPrecio(producto.precioUSD);
   }
 
   .chip:hover span {
-    border-color: var(--sage);
+    border-color: var(--acento);
     color: var(--tinta);
   }
 
@@ -342,7 +355,7 @@ const precio = formatearPrecio(producto.precioUSD);
   }
 
   .chip input:focus-visible + span {
-    outline: 2px solid var(--sage-hondo);
+    outline: 2px solid var(--acento-hondo);
     outline-offset: 3px;
   }
 
@@ -387,7 +400,7 @@ const precio = formatearPrecio(producto.precioUSD);
   .agregar {
     width: 100%;
     padding: var(--e4) var(--e5);
-    background: var(--tinta);
+    background: var(--acento-hondo);
     border: none;
     border-radius: 100px;
     color: var(--hueso);
@@ -396,7 +409,7 @@ const precio = formatearPrecio(producto.precioUSD);
   }
 
   .agregar:hover:not(:disabled) {
-    background: var(--sage-hondo);
+    background: var(--acento-noche);
   }
 
   .agregar:disabled {

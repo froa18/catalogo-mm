@@ -5,18 +5,24 @@
    --------------------------------------------------------------- */
 
 :root {
-  /* Color */
-  --hueso: #f7f4ed;
-  --hueso-hondo: #efeae0;
-  --hueso-borde: #e3dccd;
-  --tinta: #1f1d1b;
-  --tinta-media: #55504a;
-  --tinta-suave: #8b847a;
-  --sage: #8a9a7b;
-  --sage-hondo: #6d7d5f;
-  --sage-humo: #e8ece3;
+  /* Color
+     Los dos colores de marca vienen del logotipo: rosa palo y vino.
+     Los neutros llevan una pizca del mismo rojo para que no choquen. */
+  --hueso: #f9f5f3;
+  --hueso-hondo: #f2eae7;
+  --hueso-borde: #e6dad6;
+  --tinta: #241c1d;
+  --tinta-media: #5a4b4d;
+  --tinta-suave: #7b6b6d;
+  --acento: #cd8686;
+  --acento-hondo: #6a3038;
+  --acento-noche: #4f2028;
+  --acento-humo: #f7ebeb;
 
-  /* Tipografía */
+  /* Tipografía
+     --display es la letra del logotipo; el resto del catálogo sigue en
+     Fraunces + Inter. Ver nota en Marca.astro sobre Lovelace. */
+  --display: 'Cormorant Garamond', 'Fraunces', Georgia, serif;
   --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
 
@@ -70,7 +76,7 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--sage-hondo);
+  outline: 2px solid var(--acento-hondo);
   outline-offset: 3px;
 }
 

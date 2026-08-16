@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Marca from '../components/Marca.astro';
 import ProductoCard from '../components/ProductoCard.astro';
 import productos from '../data/productos.json';
 import { MARCA, CATEGORIAS } from '../config.js';
@@ -17,7 +18,7 @@ const categoriasConPiezas = CATEGORIAS.filter(
 <Base>
   <header class="cabecera">
     <div class="envoltura">
-      <h1 class="marca">{MARCA.nombre}</h1>
+      <h1 class="titulo-marca"><Marca /></h1>
       <p class="lema">{MARCA.descripcion}</p>
     </div>
   </header>
@@ -45,8 +46,7 @@ const categoriasConPiezas = CATEGORIAS.filter(
 
   <main class="envoltura">
     <p class="conteo" data-conteo>
-      {visibles.length}
-      {visibles.length === 1 ? 'pieza' : 'piezas'}
+      {`${visibles.length} ${visibles.length === 1 ? 'pieza' : 'piezas'}`}
     </p>
 
     <div class="grilla" data-grilla>
@@ -70,17 +70,13 @@ const categoriasConPiezas = CATEGORIAS.filter(
     text-align: center;
   }
 
-  .marca {
+  .titulo-marca {
     margin: 0;
-    font-family: var(--serif);
-    font-size: clamp(2.25rem, 9vw, 3.25rem);
     font-weight: 400;
-    letter-spacing: -0.03em;
-    line-height: 1;
   }
 
   .lema {
-    margin: var(--e2) 0 0;
+    margin: var(--e4) 0 0;
     color: var(--tinta-suave);
     font-size: 0.8125rem;
     letter-spacing: 0.18em;
@@ -127,7 +123,7 @@ const categoriasConPiezas = CATEGORIAS.filter(
   }
 
   .chip:hover {
-    border-color: var(--sage);
+    border-color: var(--acento);
     color: var(--tinta);
   }
 

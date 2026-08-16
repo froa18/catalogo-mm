@@ -1,11 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
+import Marca from '../components/Marca.astro';
 import { MARCA, WHATSAPP, FORMAS_PAGO, FORMAS_ENTREGA } from '../config.js';
 
 const faltaNumero = !WHATSAPP.numero;
 ---
 
 <Base titulo={`Tu pedido — ${MARCA.nombre}`}>
+  <header class="barra">
+    <div class="envoltura">
+      <Marca compacta enlace />
+    </div>
+  </header>
+
   <div class="envoltura estrecha">
     <nav class="migas">
       <a href="/">← Seguir viendo el catálogo</a>
@@ -83,6 +90,12 @@ const faltaNumero = !WHATSAPP.numero;
 </Base>
 
 <style>
+  .barra {
+    padding: var(--e4) 0;
+    border-bottom: 1px solid var(--hueso-borde);
+    text-align: center;
+  }
+
   .estrecha {
     max-width: 640px;
   }
@@ -121,8 +134,8 @@ const faltaNumero = !WHATSAPP.numero;
   .aviso {
     margin: var(--e5) 0 0;
     padding: var(--e4);
-    background: var(--sage-humo);
-    border-left: 3px solid var(--sage);
+    background: var(--acento-humo);
+    border-left: 3px solid var(--acento);
     border-radius: var(--radio);
     font-size: 0.875rem;
   }
@@ -300,7 +313,7 @@ const faltaNumero = !WHATSAPP.numero;
   .campo input:focus,
   .campo select:focus,
   .campo textarea:focus {
-    border-color: var(--sage);
+    border-color: var(--acento);
     outline: none;
   }
 
@@ -308,7 +321,7 @@ const faltaNumero = !WHATSAPP.numero;
     width: 100%;
     margin-top: var(--e3);
     padding: var(--e4) var(--e5);
-    background: var(--tinta);
+    background: var(--acento-hondo);
     border: none;
     border-radius: 100px;
     color: var(--hueso);
@@ -317,7 +330,7 @@ const faltaNumero = !WHATSAPP.numero;
   }
 
   .enviar:hover:not(:disabled) {
-    background: var(--sage-hondo);
+    background: var(--acento-noche);
   }
 
   .enviar:disabled {

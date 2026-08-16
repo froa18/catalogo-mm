@@ -1,0 +1,128 @@
+---
+/**
+ * Logotipo de Modas Marfreidy, escrito en texto (no imagen) para que se vea
+ * nítido en cualquier pantalla y siga siendo legible para buscadores.
+ *
+ * Tipografía: el logo original usa Lovelace (Zetafonts), que es de pago y no
+ * puede incrustarse en el sitio. Acá se usa Cormorant Garamond, el serif
+ * gratuito más cercano en trazo y contraste. Si en algún momento se compra la
+ * licencia web de Lovelace, basta con dejar el archivo en `public/fuentes/` y
+ * anteponerla en el token `--display` de global.css.
+ *
+ * Dos formas:
+ *   completa (por defecto) — monograma + nombre entre filetes, para la portada.
+ *   compacta               — solo el nombre en una línea, para páginas internas.
+ */
+import { MARCA } from '../config.js';
+
+interface Props {
+  compacta?: boolean;
+  /** Envuelve el logotipo en un enlace a la portada. */
+  enlace?: boolean;
+}
+
+const { compacta = false, enlace = false } = Astro.props;
+const Etiqueta = enlace ? 'a' : 'div';
+const [primera, segunda] = MARCA.nombre.split(' ');
+---
+
+<Etiqueta
+  class:list={['marca', { compacta }]}
+  href={enlace ? '/' : undefined}
+  aria-label={enlace ? `${MARCA.nombre} — ir al catálogo` : undefined}
+>
+  {
+    !compacta && (
+      <span class="monograma" aria-hidden="true">
+        <span class="eme-rosa">{MARCA.iniciales.charAt(0)}</span>
+        <span class="eme-vino">{MARCA.iniciales.charAt(1)}</span>
+      </span>
+    )
+  }
+
+  {/* El nombre se parte en dos para el diseño; se dicta entero por lectores
+      de pantalla, sin el interletrado que lo deletrearía. */}
+  <span class="nombre" aria-hidden="true">
+    <span class="palabra">{primera}</span>
+    <span class="palabra">{segunda}</span>
+  </span>
+  <span class="oculto-visual">{MARCA.nombre}</span>
+</Etiqueta>
+
+<style>
+  .marca {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* --- Monograma: las dos emes superpuestas --------------------- */
+
+  .monograma {
+    display: flex;
+    align-items: flex-end;
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 15vw, 5.25rem);
+    font-weight: 500;
+    line-height: 0.82;
+  }
+
+  .eme-rosa {
+    color: var(--acento);
+  }
+
+  .eme-vino {
+    /* Menor y encimada, como en el logotipo */
+    margin-left: -0.34em;
+    font-size: 0.76em;
+    color: var(--acento-hondo);
+  }
+
+  /* --- Nombre entre filetes ------------------------------------- */
+
+  .nombre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--e3);
+    padding: var(--e2) 0;
+    border-top: 1px solid var(--acento-hondo);
+    border-bottom: 1px solid var(--acento-hondo);
+    font-family: var(--display);
+    font-size: clamp(0.875rem, 3.4vw, 1.125rem);
+    font-weight: 500;
+    letter-spacing: 0.42em;
+    line-height: 1.5;
+    color: var(--acento-hondo);
+    text-transform: uppercase;
+  }
+
+  /* El interletrado deja un hueco a la derecha; se compensa para que el
+     bloque quede ópticamente centrado. */
+  .palabra {
+    text-indent: 0.42em;
+  }
+
+  /* --- Forma compacta ------------------------------------------- */
+
+  .compacta .nombre {
+    flex-direction: row;
+    gap: 0.42em;
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    font-size: 0.8125rem;
+    letter-spacing: 0.26em;
+  }
+
+  .compacta .palabra {
+    text-indent: 0.26em;
+  }
+
+  a.marca:hover .nombre {
+    color: var(--acento);
+    border-color: var(--acento);
+  }
+</style>
