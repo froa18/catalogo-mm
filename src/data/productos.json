@@ -84,5 +84,19 @@
     "disponible": true,
     "etiqueta": null,
     "orden": 5
+  },
+  {
+    "id": "blusa-jean",
+    "codigo": "MM-006",
+    "nombre": "Blusa Jean",
+    "descripcion": "Camisera en denim liviano, con bolsillos de parche y botones tono madera.",
+    "categoria": "manga-larga",
+    "precioUSD": 15,
+    "tallas": ["S", "M", "L", "XL", "2XL", "3XL"],
+    "colores": [{ "nombre": "Jean", "hex": "#4C6B8A" }],
+    "imagen": "/imagenes/blusa-jean.jpg",
+    "disponible": true,
+    "etiqueta": "Nuevo",
+    "orden": 6
   }
 ]
