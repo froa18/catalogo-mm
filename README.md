@@ -14,21 +14,50 @@ Sin checkout, sin pasarela de pago. El cierre de venta sigue siendo conversacion
 
 ## Estado
 
-Fase 2 — el flujo de compra funciona de punta a punta como **borrador**:
-catálogo, ficha, carrito y armado del pedido. Pendiente de pulido y de
-configurar el número de WhatsApp.
+Fase 3 — el sitio está en vivo y el flujo de compra funciona de punta a punta
+como **borrador**: catálogo, ficha, carrito y armado del pedido. Pendiente de
+pulido, de sumar las fotos reales que faltan y de configurar el número de
+WhatsApp del negocio.
 
 | Fase | Contenido | Estado |
 |---|---|---|
 | 0 | Repositorio y estructura base | ✅ |
 | 1 | Esquema de producto y datos semilla | ✅ |
 | 2 | Sitio funcional: catálogo, ficha, carrito, WhatsApp | ✅ borrador |
-| 3 | Deploy en Vercel | Pendiente |
+| 3 | Deploy en Vercel | ✅ — cada push a `main` republica el sitio solo |
 | 4 | Panel de edición con Sanity | Pendiente |
-| 5 | Fotos reales y lanzamiento | Pendiente |
+| 5 | Fotos reales y lanzamiento | En progreso — 2 de 7 piezas con foto real |
 
-> El número de WhatsApp configurado es **provisional, para pruebas**. Debe
-> reemplazarse por el del negocio antes de publicar.
+## Qué falta
+
+- [ ] **Fotos reales** de las 5 piezas que aún muestran el ícono de línea
+      (Aurora, Vela, Mar, Sol, Duna) — ver `src/data/productos.json`.
+- [ ] **Número de WhatsApp real del negocio.** El que está configurado hoy es
+      de prueba (ver más abajo).
+- [ ] **Panel de edición (Sanity, fase 4).** Hoy el catálogo se edita a mano en
+      `src/data/productos.json` — funciona, pero cada cambio pasa por acá.
+- [ ] **Bolívares con tasa automática** — diseño completo y APIs verificadas en
+      `docs/decisiones.md` (punto 9), falta decidir BCV vs. paralelo y
+      construirlo.
+- [ ] Revisar el catálogo completo en el teléfono real antes de anunciarlo
+      (hasta ahora se validó con capturas y el simulador de Playwright).
+
+## Retomar el trabajo en otra computadora
+
+```bash
+git clone https://github.com/froa18/catalogo-mm.git
+cd catalogo-mm
+npm install
+cp .env.example .env    # completar PUBLIC_WHATSAPP_NUMERO (ver abajo)
+npm run dev
+```
+
+`.env` no se sube al repositorio (está en `.gitignore`), así que en una
+computadora nueva el sitio arranca **sin** número de WhatsApp configurado: no
+se rompe, pero deshabilita el envío del pedido hasta completarlo. El número de
+producción vive en las variables de entorno de Vercel, no acá — si hace falta
+recuperarlo, está en el panel de Vercel del proyecto. Es **provisional, para
+pruebas** — hay que reemplazarlo por el del negocio antes de publicar.
 
 ## Configurar el número de WhatsApp
 
@@ -62,6 +91,8 @@ npm run build    # genera el sitio listo para publicar
 ## Estructura
 
 ```
+public/
+└─ imagenes/           → fotos de producto, referenciadas desde productos.json
 src/
 ├─ config.js           → marca, WhatsApp, moneda, categorías
 ├─ data/
@@ -74,18 +105,21 @@ src/
 
 ```json
 {
-  "id": "blusa-aurora",
-  "codigo": "MM-001",
-  "nombre": "Blusa Aurora",
-  "descripcion": "Manga larga con caída suave y puño abierto.",
+  "id": "blazer-ceniza",
+  "codigo": "MM-007",
+  "nombre": "Blazer Ceniza",
+  "descripcion": "Entallado en la cintura, con bolsillos de solapa y botones tono madera.",
   "categoria": "manga-larga",
-  "precioUSD": 22,
+  "precioUSD": 15,
   "tallas": ["S", "M", "L"],
-  "colores": [{ "nombre": "Negro", "hex": "#1F1D1B" }],
-  "imagen": null,
+  "colores": [
+    { "nombre": "Gris", "hex": "#6E7580", "imagen": "/imagenes/blazer-gris.jpg" },
+    { "nombre": "Negro", "hex": "#1B1B1D", "imagen": "/imagenes/blazer-negro.jpg" }
+  ],
+  "imagen": "/imagenes/blazer-gris.jpg",
   "disponible": true,
   "etiqueta": "Nuevo",
-  "orden": 1
+  "orden": 7
 }
 ```
 
@@ -94,7 +128,8 @@ src/
 | `codigo` | Referencia corta (`MM-001`, secuencial) para identificar la pieza fuera del sitio — en el pedido de WhatsApp y al llevar el inventario a mano |
 | `precioUSD` | Precio en dólares. Ver decisión 8 en `docs/decisiones.md` |
 | `tallas` | Se elimina una talla del arreglo cuando se agota |
-| `colores` | El `hex` permite mostrar el color real en el selector |
+| `colores` | El `hex` pinta la muestra del selector. El `imagen` es opcional: si el color lo trae, elegirlo en la ficha cambia la foto principal por esa (estilo Shein). Si un color no tiene `imagen`, queda con la foto general del producto |
+| `imagen` (raíz) | Foto por defecto de la tarjeta y de la ficha — normalmente la del primer color |
 | `disponible` | En `false` oculta el producto completo |
 | `etiqueta` | Distintivo opcional: `"Nuevo"`, `"Últimas piezas"` |
 | `orden` | Posición en la grilla |

@@ -232,10 +232,54 @@ total, sin importar el volumen de tráfico.
 
 ---
 
+## 10. Cada color puede traer su propia foto
+
+**Decidido.** `colores[]` acepta un campo `imagen` opcional por color. Cuando
+existe, elegir ese color en la ficha del producto reemplaza la foto principal
+por esa — el patrón que usan Shein y la mayoría de tiendas con variantes de
+color. Si un color no trae `imagen`, se queda con la foto general del
+producto (`imagen` en la raíz), así que el campo es retrocompatible: ningún
+producto viejo necesitó tocarse.
+
+El intercambio es JS mínimo en `producto/[id].astro`: cada radio de color
+lleva el `data-imagen` de su variante, y al cambiar la selección se reemplaza
+el `src` de la imagen principal. No hay estado ni librería de por medio.
+
+---
+
+## 11. Se quitó la etiqueta de precio colgante
+
+**Decidido.** Tanto la tarjeta del catálogo como la ficha de producto tenían
+una etiqueta colgante (efecto "tag" físico) superpuesta sobre la foto, con el
+precio y el código. En pantallas de teléfono angostas terminaba tapando parte
+de la prenda — se notó al revisar la Blusa Jean en capturas reales.
+
+Se reemplazó por texto simple: el precio va junto al nombre, sin superponerse
+a la imagen. El código de producto pasó a ser solo para lectores de pantalla
+en la tarjeta (ya no hace falta mostrarlo ahí a simple vista) y se mantiene
+visible en la ficha completa.
+
+**Si se quiere recuperar el efecto visual de etiqueta más adelante**, tiene
+que ir fuera del área de la foto (por ejemplo, debajo de la imagen o en una
+esquina de la tarjeta que no dependa del ancho de pantalla) para no repetir el
+problema.
+
+---
+
 ## Decisiones pendientes
 
 - [ ] Cuál tasa de cambio se usa (BCV o paralela) — ver decisión 9
-- [ ] Alcance de las palancas del panel
-- [ ] Número de WhatsApp para recibir pedidos
-- [ ] Si el carrito incluye un paso de revisión y si pide nombre y zona de entrega
-- [ ] Nombre de marca y logotipo
+- [ ] Alcance de las palancas del panel de Sanity (fase 4, no empezada)
+- [ ] Número de WhatsApp real del negocio — el configurado hoy es de prueba
+- [ ] Fotos reales de las piezas que aún no las tienen (Aurora, Vela, Mar,
+      Sol, Duna — ver `src/data/productos.json`)
+
+### Resueltas desde la última revisión
+
+- [x] Nombre de marca y logotipo — **Modas Marfreidy**, ver `src/config.js`
+      y `src/components/Marca.astro`
+- [x] Si el carrito pide nombre y zona de entrega — sí, `pedido.astro` los
+      pide junto con forma de pago y forma de entrega antes de armar el
+      mensaje de WhatsApp
+- [x] Deploy en Vercel — en vivo en https://catalogo-mm-xi.vercel.app, se
+      republica solo con cada push a `main`
