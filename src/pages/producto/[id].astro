@@ -33,21 +33,13 @@ const precio = formatearPrecio(producto.precioUSD);
       <div class="lienzo">
         {
           producto.imagen ? (
-            <img src={producto.imagen} alt={producto.nombre} />
+            <img src={producto.imagen} alt={producto.nombre} data-imagen-principal />
           ) : (
             <Flat categoria={producto.categoria} class="flat" />
           )
         }
 
         {producto.etiqueta && <span class="distintivo">{producto.etiqueta}</span>}
-
-        <div class="colgante" aria-hidden="true">
-          <span class="cuerda"></span>
-          <span class="etiqueta">
-            <span class="precio-etiqueta">{precio}</span>
-            <span class="codigo-etiqueta">{producto.codigo}</span>
-          </span>
-        </div>
       </div>
 
       <div class="detalle">
@@ -79,7 +71,12 @@ const precio = formatearPrecio(producto.precioUSD);
                 <div class="chips">
                   {producto.colores.map((color) => (
                     <label class="chip chip-color">
-                      <input type="radio" name="color" value={color.nombre} />
+                      <input
+                        type="radio"
+                        name="color"
+                        value={color.nombre}
+                        data-imagen={color.imagen ?? ''}
+                      />
                       <span>
                         <span class="muestra" style={`--muestra: ${color.hex}`} />
                         {color.nombre}
@@ -184,61 +181,6 @@ const precio = formatearPrecio(producto.precioUSD);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     border-radius: var(--radio);
-  }
-
-  .colgante {
-    position: absolute;
-    top: 0;
-    right: var(--e6);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform-origin: 50% 0;
-    transform: rotate(-3deg);
-  }
-
-  .cuerda {
-    width: 1px;
-    height: 32px;
-    background: var(--tinta-suave);
-    opacity: 0.55;
-  }
-
-  .etiqueta {
-    position: relative;
-    display: grid;
-    place-items: center;
-    min-width: 72px;
-    padding: 18px var(--e3) var(--e3);
-    background: var(--hueso);
-    border: 1px solid var(--hueso-borde);
-    clip-path: polygon(0 14%, 50% 0, 100% 14%, 100% 100%, 0 100%);
-  }
-
-  .etiqueta::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--hueso-hondo);
-    box-shadow: inset 0 0 0 1px var(--hueso-borde);
-  }
-
-  .precio-etiqueta {
-    font-family: var(--serif);
-    font-size: 1.0625rem;
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  .codigo-etiqueta {
-    margin-top: 2px;
-    color: var(--tinta-suave);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
   }
 
   /* --- Detalle -------------------------------------------------- */
@@ -432,6 +374,8 @@ const precio = formatearPrecio(producto.precioUSD);
     const boton = formulario.querySelector<HTMLButtonElement>('[data-agregar]')!;
     const valorCantidad =
       formulario.querySelector<HTMLElement>('[data-cantidad-valor]')!;
+    const imagenPrincipal =
+      document.querySelector<HTMLImageElement>('[data-imagen-principal]');
 
     let cantidad = 1;
 
@@ -446,6 +390,16 @@ const precio = formatearPrecio(producto.precioUSD);
     }
 
     formulario.addEventListener('change', refrescar);
+
+    // Como en Shein: elegir un color cambia la foto principal por la de esa
+    // variante, cuando el color tiene una foto propia.
+    formulario.addEventListener('change', (evento) => {
+      const input = evento.target as HTMLInputElement;
+      if (input.name !== 'color' || !imagenPrincipal) return;
+
+      const nuevaImagen = input.dataset.imagen;
+      if (nuevaImagen) imagenPrincipal.src = nuevaImagen;
+    });
 
     formulario.addEventListener('click', (evento) => {
       const paso = (evento.target as HTMLElement).closest<HTMLElement>(

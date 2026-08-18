@@ -13,7 +13,7 @@ interface Props {
     categoria: string;
     precioUSD: number;
     tallas: string[];
-    colores: { nombre: string; hex: string }[];
+    colores: { nombre: string; hex: string; imagen?: string }[];
     imagen: string | null;
     etiqueta: string | null;
   };
@@ -39,15 +39,6 @@ const agotado = producto.tallas.length === 0;
     }
 
     {producto.etiqueta && <span class="distintivo">{producto.etiqueta}</span>}
-
-    {/* Etiqueta colgante con el precio y código — detalle de marca */}
-    <div class="colgante" aria-hidden="true">
-      <span class="cuerda"></span>
-      <span class="etiqueta">
-        <span class="precio">{formatearPrecio(producto.precioUSD)}</span>
-        <span class="codigo">{producto.codigo}</span>
-      </span>
-    </div>
   </div>
 
   {
@@ -60,12 +51,13 @@ const agotado = producto.tallas.length === 0;
   }
 
   <div class="info">
-    <h3 class="nombre">{producto.nombre}</h3>
+    <div class="encabezado">
+      <h3 class="nombre">{producto.nombre}</h3>
+      <p class="precio">{formatearPrecio(producto.precioUSD)}</p>
+    </div>
     <p class="descripcion">{producto.descripcion}</p>
 
-    <p class="oculto-visual">
-      Precio: {formatearPrecio(producto.precioUSD)} · Código: {producto.codigo}
-    </p>
+    <p class="oculto-visual">Código: {producto.codigo}</p>
 
     <div class="variantes">
       <ul class="colores" aria-label="Colores disponibles">
@@ -144,8 +136,6 @@ const agotado = producto.tallas.length === 0;
 
   /* --- Distintivo ("Nuevo", "Últimas piezas") ------------------- */
 
-  /* Abajo a la izquierda: arriba chocaba con la etiqueta colgante en cuanto
-     el texto pasaba de una palabra. */
   .distintivo {
     position: absolute;
     bottom: var(--e3);
@@ -160,76 +150,25 @@ const agotado = producto.tallas.length === 0;
     border-radius: var(--radio);
   }
 
-  /* --- Etiqueta colgante --------------------------------------- */
-
-  .colgante {
-    position: absolute;
-    top: 0;
-    right: var(--e5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform-origin: 50% 0;
-    transform: rotate(-3deg);
-    transition: transform var(--transicion);
-  }
-
-  .cuerda {
-    width: 1px;
-    height: 26px;
-    background: var(--tinta-suave);
-    opacity: 0.55;
-  }
-
-  .etiqueta {
-    position: relative;
-    display: grid;
-    place-items: center;
-    min-width: 62px;
-    padding: 16px var(--e3) var(--e2);
-    background: #fff;
-    border: 1px solid var(--hueso-borde);
-    box-shadow: 0 2px 6px rgb(74 32 40 / 0.08);
-    /* Esquinas superiores biseladas, como una etiqueta real */
-    clip-path: polygon(0 14%, 50% 0, 100% 14%, 100% 100%, 0 100%);
-  }
-
-  /* El agujero por donde pasa la cuerda */
-  .etiqueta::before {
-    content: '';
-    position: absolute;
-    top: 9px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--hueso-hondo);
-    box-shadow: inset 0 0 0 1px var(--hueso-borde);
-  }
-
-  .precio {
-    font-family: var(--serif);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1;
-  }
-
-  .codigo {
-    margin-top: 2px;
-    color: var(--tinta-suave);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-  }
-
-  .tarjeta:hover .colgante {
-    transform: rotate(1.5deg);
-  }
-
   /* --- Información --------------------------------------------- */
 
   .info {
     padding: var(--e3) var(--e2) 0;
+  }
+
+  .encabezado {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--e2);
+  }
+
+  .precio {
+    flex: none;
+    font-family: var(--serif);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   /* En el carrusel la tarjeta es solo la pieza: sin texto y sin el aire que
@@ -239,21 +178,6 @@ const agotado = producto.tallas.length === 0;
   }
 
   .solo-imagen .info {
-    display: none;
-  }
-
-  /* Tarjeta chica: la etiqueta se achica y suelta el código, para no taparle
-     la prenda a la clienta. */
-  .solo-imagen .etiqueta {
-    min-width: 48px;
-    padding: 13px var(--e2) 6px;
-  }
-
-  .solo-imagen .precio {
-    font-size: 0.8125rem;
-  }
-
-  .solo-imagen .codigo {
     display: none;
   }
 
@@ -310,12 +234,4 @@ const agotado = producto.tallas.length === 0;
     letter-spacing: 0.04em;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .colgante {
-      transition: none;
-    }
-    .tarjeta:hover .colgante {
-      transform: rotate(-3deg);
-    }
-  }
 </style>

@@ -98,5 +98,24 @@
     "disponible": true,
     "etiqueta": "Nuevo",
     "orden": 6
+  },
+  {
+    "id": "blazer-ceniza",
+    "codigo": "MM-007",
+    "nombre": "Blazer Ceniza",
+    "descripcion": "Entallado en la cintura, con bolsillos de solapa y botones tono madera.",
+    "categoria": "manga-larga",
+    "precioUSD": 15,
+    "tallas": ["S", "M", "L"],
+    "colores": [
+      { "nombre": "Gris", "hex": "#6E7580", "imagen": "/imagenes/blazer-gris.jpg" },
+      { "nombre": "Negro", "hex": "#1B1B1D", "imagen": "/imagenes/blazer-negro.jpg" },
+      { "nombre": "Vino", "hex": "#5C1F2E", "imagen": "/imagenes/blazer-vino.jpg" },
+      { "nombre": "Camel", "hex": "#B98A5E", "imagen": "/imagenes/blazer-camel.jpg" }
+    ],
+    "imagen": "/imagenes/blazer-gris.jpg",
+    "disponible": true,
+    "etiqueta": "Nuevo",
+    "orden": 7
   }
 ]
